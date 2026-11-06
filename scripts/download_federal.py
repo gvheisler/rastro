@@ -1,6 +1,6 @@
-"""Baixa os arquivos de emendas parlamentares do Portal da Transparência (CGU).
+"""Download the amendment files from Portal da Transparência (CGU).
 
-Sobrescreve os CSVs em data/raw e imprime as linhas da tabela de data/README.md.
+Overwrites the CSVs in data/raw and prints the table rows for data/README.md.
 """
 
 import argparse
@@ -29,7 +29,7 @@ def sha256(path: Path) -> str:
 
 
 def count_rows(path: Path) -> int:
-    """Linhas de dados, sem o cabeçalho."""
+    """Data rows, excluding the header."""
     with path.open("rb") as f:
         return sum(chunk.count(b"\n") for chunk in iter(lambda: f.read(1 << 20), b"")) - 1
 
@@ -47,10 +47,10 @@ def main(dest: Path) -> None:
         download(URL, archive)
         with zipfile.ZipFile(archive) as zf:
             if (bad := zf.testzip()) is not None:
-                raise SystemExit(f"arquivo corrompido no zip: {bad}")
+                raise SystemExit(f"corrupt member in zip: {bad}")
             missing = set(FILES) - set(zf.namelist())
             if missing:
-                raise SystemExit(f"arquivos ausentes no zip: {sorted(missing)}")
+                raise SystemExit(f"files missing from zip: {sorted(missing)}")
             for name in FILES:
                 with zf.open(name) as src, (dest / name).open("wb") as out:
                     shutil.copyfileobj(src, out)
