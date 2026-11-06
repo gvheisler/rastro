@@ -8,6 +8,23 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_PASSWORD: rastro_ci
+      POSTGRES_PORT: "5432"
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: rastro
+          POSTGRES_PASSWORD: rastro_ci
+          POSTGRES_DB: rastro
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U rastro -d rastro"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v7
