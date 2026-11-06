@@ -21,3 +21,7 @@ O script usa o link direto `https://portaldatransparencia.gov.br/download-de-dad
 | `EmendasParlamentares_PorFavorecido.csv` | 828.756 | 182,9 MB | `5b159ba159e53c6e66357079243b3533ab74e8a58c90051d89ded8cf860f51ed` |
 
 Formato: ISO-8859-1, separador `;`, aspas duplas, linhas terminadas em CRLF, decimal com vírgula e datas em dd/mm/aaaa. Colunas e regras de filtro de SC em [`docs/data-dictionary.md`](../docs/data-dictionary.md).
+
+## Amostra de teste
+
+`tests/fixtures/` tem uma amostra dos três arquivos, no mesmo formato: cerca de 260 linhas de SC e 40 de outros estados, mais as linhas relacionadas nos outros dois arquivos. Pessoas físicas são mascaradas e linhas com sequência de 11 dígitos no nome são descartadas. Para gerar de novo: `uv run python scripts/make_fixture.py`.

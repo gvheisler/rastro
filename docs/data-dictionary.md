@@ -58,3 +58,28 @@ Detalhes sobre as 3.122 linhas de emendas de SC:
 - Não entram: localidade `Nacional` (5.383 linhas), `Exterior` e UF `Múltiplo`. Não há como atribuí-las a SC.
 
 Para o arquivo por favorecido, `UF Favorecido = 'SC'` (30.996 linhas) não é o critério correto. Ele descreve quem recebe, não o destino da emenda: das 16.520 linhas ligadas a emendas de SC, só 12.033 têm favorecido em SC, e as outras incluem favorecidos no DF (2.416), SP (674) e PR (450). Cada código de emenda aparece com uma única UF no arquivo principal, então a ligação pelo código é inequívoca.
+
+## Camadas no banco
+
+`raw` e `staging` guardam o Brasil inteiro; o filtro de Santa Catarina entra na camada de consulta.
+
+### `raw`
+
+Uma tabela por arquivo (`emendas_parlamentares`, `emendas_convenios`, `emendas_por_favorecido`) com todas as colunas em texto, com os nomes do cabeçalho sem acento e em minúsculas (`Código da Emenda` vira `codigo_da_emenda`). Os arquivos são carregados por `COPY` na codificação original. `linha_arquivo` guarda a posição da linha no CSV, e `raw.cargas` registra arquivo, SHA-256, número de linhas e data de cada carga. Se o cabeçalho de um CSV mudar, a carga falha em vez de gravar colunas deslocadas.
+
+### `staging`
+
+Tabelas `emendas`, `convenios` e `pagamentos_favorecido`, com as mesmas linhas de `raw` e as regras abaixo.
+
+| Regra | Efeito |
+| --- | --- |
+| Valores ausentes | `Sem informação`, `S/I` e vazio viram `NULL`. Código de favorecido negativo (`-8`, `-3`) também. |
+| Valores monetários | `numeric(18,2)`, convertidos de `1450000,00`. |
+| Datas | `data_publicacao` em `date`; `competencia` é o primeiro dia do mês de `Ano/Mês`. |
+| UF | `uf_sigla` vem do código IBGE da UF (`staging.uf`). Nos convênios vem do sufixo da localidade ou do nome `(UF)`. |
+| Município | Só quando há código IBGE. `Múltiplo` e `Sem informação` viram `NULL`. |
+| `localidade_tipo` | `municipio`, `estado`, `multiplo`, `nacional`, `exterior` ou `regiao`, conforme o formato da localidade. |
+| Códigos numéricos | `codigo_funcao` e `codigo_subfuncao` são inteiros; o marcador `MU` (múltiplo) vira `NULL`. |
+| `tipo_favorecido` | `Pessoa Fisica` vira `Pessoa Física`, `Inscrição Genéric` vira `Inscrição Genérica` e `Sem informação` vira `NULL`. |
+
+O nome do favorecido pessoa física é mantido no `staging`; a camada de consulta não deve expô-lo.

@@ -18,8 +18,22 @@ O Rastro carrega os dados públicos em um banco Postgres e usa um agente de IA p
 
 Em desenvolvimento.
 
-- Pronto: estrutura do projeto, Postgres local com Docker Compose, script de download dos dados federais.
-- Falta: ingestão e modelagem dos dados, reconciliação com o painel do TCE/SC, agente, avaliação e interface de chat.
+- Pronto: Postgres local com Docker Compose, download dos dados federais e carga nas camadas `raw` e `staging`, com testes.
+- Falta: transferências especiais (Transferegov), camada de consulta e checks de qualidade, reconciliação com o painel do TCE/SC, agente, avaliação e interface de chat.
+
+## Como rodar
+
+Requisitos: Docker, [uv](https://docs.astral.sh/uv/) e Python 3.12.
+
+```
+make setup    # sobe o Postgres (porta 5433) e instala as dependências
+make ingest   # baixa os dados se necessário, carrega no banco e monta o staging
+make test
+```
+
+`make ingest` pode ser repetido: cada execução recarrega as tabelas sem duplicar linhas. `make psql` abre um console no banco.
+
+Os dados passam por duas camadas: `raw` guarda os CSVs como texto, exatamente como vieram do Portal da Transparência, e `staging` aplica tipos, trata valores ausentes e padroniza categorias. Detalhes em [`docs/data-dictionary.md`](docs/data-dictionary.md).
 
 ## Fontes dos dados
 
