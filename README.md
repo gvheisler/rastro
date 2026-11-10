@@ -18,22 +18,35 @@ O Rastro carrega os dados públicos em um banco Postgres e usa um agente de IA p
 
 Em desenvolvimento.
 
-- Pronto: Postgres local com Docker Compose, download dos dados federais e carga nas camadas `raw` e `staging`, com testes.
-- Falta: transferências especiais (Transferegov), camada de consulta e checks de qualidade, reconciliação com o painel do TCE/SC, agente, avaliação e interface de chat.
+- Pronto: Postgres local com Docker Compose, download dos dados federais, carga nas camadas `raw`, `staging` e `mart` (Santa Catarina), checks de qualidade, agente texto→SQL com modelo local e chat em Streamlit, com testes.
+- Falta: transferências especiais (Transferegov), reconciliação com o painel do TCE/SC, avaliação com perguntas e gabarito, e a comparação com a API do Claude.
 
 ## Como rodar
 
-Requisitos: Docker, [uv](https://docs.astral.sh/uv/) e Python 3.12.
+Requisitos: Docker, [uv](https://docs.astral.sh/uv/), Python 3.12 e [Ollama](https://ollama.com) com o modelo `qwen3:8b` (`ollama pull qwen3:8b`).
 
 ```
 make setup    # sobe o Postgres (porta 5433) e instala as dependências
-make ingest   # baixa os dados se necessário, carrega no banco e monta o staging
+make ingest   # baixa os dados se necessário e monta raw, staging e mart
+make check    # checks de qualidade sobre o mart
+make model    # cria o modelo rastro-sql no Ollama (qwen3:8b com contexto de 8192 tokens)
+make app      # abre o chat em http://localhost:8501
 make test
 ```
 
-`make ingest` pode ser repetido: cada execução recarrega as tabelas sem duplicar linhas. `make psql` abre um console no banco.
+`make ingest` pode ser repetido: cada execução recarrega as tabelas sem duplicar linhas. `make psql` abre um console no banco. Para perguntar pelo terminal: `uv run rastro ask "Quanto foi pago em emendas em 2024?"`.
 
-Os dados passam por duas camadas: `raw` guarda os CSVs como texto, exatamente como vieram do Portal da Transparência, e `staging` aplica tipos, trata valores ausentes e padroniza categorias. Detalhes em [`docs/data-dictionary.md`](docs/data-dictionary.md).
+Os dados passam por três camadas: `raw` guarda os CSVs como texto, exatamente como vieram do Portal da Transparência; `staging` aplica tipos, trata valores ausentes e padroniza categorias; `mart` tem só Santa Catarina, com nomes em português e pessoas físicas sem nome. Detalhes em [`docs/data-dictionary.md`](docs/data-dictionary.md).
+
+## Como o agente responde
+
+1. Uma triagem simples recusa, antes do modelo, pedidos para alterar dados, pedir CPF ou acusar pessoas.
+2. O modelo recebe o esquema do `mart` e escolhe entre quatro ferramentas: `run_sql`, `find_values` (como um nome está escrito nos dados), `ask_clarification` e `refuse`.
+3. Todo SQL passa pelo `sql_guard`: uma única instrução `SELECT`, só tabelas do `mart`, sem funções de sistema (como `pg_sleep` ou `current_setting`), `AND` e `OR` com parênteses e `LIMIT` de no máximo 200 linhas. A consulta roda com um usuário Postgres somente leitura e limite de 10 s.
+4. A resposta mostra o texto, o SQL, a tabela com o resultado e a fonte. Resultado vazio vira "não encontrei" e valores do texto que não aparecem no resultado são sinalizados.
+5. Cada pergunta, SQL, tempo e modelo ficam em `logs/agent.jsonl`.
+
+O cliente usa a API de chat compatível com OpenAI. Foi testado com o Ollama; outro servidor compatível, como o vLLM, deve funcionar ajustando `LLM_BASE_URL`, `LLM_MODEL` e `LLM_EXTRA_BODY` no `.env`.
 
 ## Fontes dos dados
 

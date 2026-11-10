@@ -82,4 +82,26 @@ Tabelas `emendas`, `convenios` e `pagamentos_favorecido`, com as mesmas linhas d
 | Códigos numéricos | `codigo_funcao` e `codigo_subfuncao` são inteiros; o marcador `MU` (múltiplo) vira `NULL`. |
 | `tipo_favorecido` | `Pessoa Fisica` vira `Pessoa Física`, `Inscrição Genéric` vira `Inscrição Genérica` e `Sem informação` vira `NULL`. |
 
-O nome do favorecido pessoa física é mantido no `staging`; a camada de consulta não deve expô-lo.
+O nome do favorecido pessoa física é mantido no `staging`; o `mart` não o expõe.
+
+### `mart`
+
+Só Santa Catarina, com nomes em português sem acento. É a única camada que o agente enxerga, por um usuário Postgres somente leitura (`rastro_ro`, com `statement_timeout` de 10 s). Cada tabela e coluna tem comentário no banco (`sql/03_mart.sql`), e o prompt do agente é montado a partir deles.
+
+| Tabela | Linhas | Conteúdo |
+| --- | --- | --- |
+| `emendas` | 3.122 | Emendas com destino a SC, no mesmo grão do arquivo original. |
+| `convenios` | 4.429 | Convênios com gasto em SC, com `autor` e `ano_emenda` trazidos da emenda. |
+| `pagamentos_favorecidos` | 16.520 | Pagamentos das emendas de SC por favorecido e mês, com `autor`, `ano_emenda` e `ano_pagamento`. |
+| `fontes` | 3 | Arquivo de origem, período coberto e data da carga de cada tabela. |
+
+Regras do `mart`:
+
+- Pessoa física: `nome_favorecido` vira `Pessoa física (nome omitido)` e `codigo_favorecido` fica nulo. Sequências de 11 dígitos isoladas em nomes e objetos viram `***`.
+- `valor_pago` e os demais valores de `emendas` são acumulados por ano da emenda; o pagamento mês a mês está em `pagamentos_favorecidos`.
+- Em `emendas`, `localidade_tipo` separa `municipio`, `estado` e `multiplo`. Os valores por município não somam o total do estado: em 2024, por exemplo, a maior parte do valor pago está em `multiplo`.
+- `emendas` tem várias linhas por emenda. Contar emendas exige `count(distinct codigo_emenda)`, e unir `emendas` com `pagamentos_favorecidos` pelo código duplica valores.
+
+### Checks de qualidade
+
+`make check` roda `rastro check` sobre o `mart` e sai com erro se algum check do tipo `error` falhar. Os checks `error` cobrem ano fora de 2014 até o ano atual, valores nulos ou negativos, linhas duplicadas, município sem nome, competência fora do período, pessoa física exposta, texto com formato de CPF e diferença de linhas entre `staging` e `mart`. Os checks `info` só informam particularidades da fonte: emendas e convênios sem código, estornos negativos em pagamentos, restos a pagar negativos e valor pago acima do empenhado.
