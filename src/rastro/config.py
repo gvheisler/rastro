@@ -1,10 +1,12 @@
 from pathlib import Path
+from typing import Any
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw"
 SQL_DIR = ROOT / "sql"
+LOG_DIR = ROOT / "logs"
 
 
 class Settings(BaseSettings):
@@ -17,6 +19,10 @@ class Settings(BaseSettings):
     postgres_port: int = 5433
     readonly_user: str = "rastro_ro"
     readonly_password: str
+    llm_base_url: str = "http://localhost:11434/v1"
+    llm_model: str = "rastro-sql"
+    llm_api_key: str | None = None
+    llm_extra_body: dict[str, Any] = {"reasoning_effort": "none"}
 
     def _dsn(self, user: str, password: str) -> str:
         return (

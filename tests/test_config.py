@@ -28,3 +28,23 @@ def test_passwords_are_required(monkeypatch, missing):
     monkeypatch.delenv(missing)
     with pytest.raises(ValidationError):
         Settings(_env_file=None)
+
+
+def test_llm_defaults_point_to_local_ollama(monkeypatch):
+    monkeypatch.setenv("POSTGRES_PASSWORD", "segredo")
+    monkeypatch.setenv("READONLY_PASSWORD", "leitura")
+    settings = Settings(_env_file=None)
+    assert settings.llm_base_url == "http://localhost:11434/v1"
+    assert settings.llm_model == "rastro-sql"
+    assert settings.llm_api_key is None
+    assert settings.llm_extra_body == {"reasoning_effort": "none"}
+
+
+def test_llm_can_point_to_another_server(monkeypatch):
+    monkeypatch.setenv("POSTGRES_PASSWORD", "segredo")
+    monkeypatch.setenv("READONLY_PASSWORD", "leitura")
+    monkeypatch.setenv("LLM_BASE_URL", "http://localhost:8000/v1")
+    monkeypatch.setenv("LLM_EXTRA_BODY", '{"chat_template_kwargs": {"enable_thinking": false}}')
+    settings = Settings(_env_file=None)
+    assert settings.llm_base_url == "http://localhost:8000/v1"
+    assert settings.llm_extra_body == {"chat_template_kwargs": {"enable_thinking": False}}

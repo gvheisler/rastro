@@ -6,6 +6,8 @@ from typing import Any, Protocol
 
 import httpx
 
+from rastro.config import Settings
+
 Message = dict[str, Any]
 
 
@@ -97,4 +99,13 @@ def _tool_call(raw: dict[str, Any]) -> ToolCall:
             arguments, error = {}, "The arguments were not valid JSON."
     return ToolCall(
         raw.get("id") or f"call_{uuid.uuid4().hex[:8]}", function["name"], arguments, error
+    )
+
+
+def build_llm(settings: Settings) -> LLMClient:
+    return OpenAICompatibleClient(
+        settings.llm_base_url,
+        settings.llm_model,
+        api_key=settings.llm_api_key,
+        extra_body=settings.llm_extra_body,
     )

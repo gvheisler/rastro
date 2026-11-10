@@ -133,3 +133,15 @@ def test_unreachable_server_becomes_an_llm_error():
 
     with pytest.raises(LLMError, match="http://llm.test/v1"):
         client_for(handler).complete(MESSAGES, TOOLS)
+
+
+def test_build_llm_uses_the_settings(monkeypatch):
+    from rastro.agent.llm import build_llm
+    from rastro.config import Settings
+
+    monkeypatch.setenv("POSTGRES_PASSWORD", "x")
+    monkeypatch.setenv("READONLY_PASSWORD", "y")
+    monkeypatch.setenv("LLM_MODEL", "outro-modelo")
+    client = build_llm(Settings(_env_file=None))
+    assert isinstance(client, OpenAICompatibleClient)
+    assert client.model == "outro-modelo"
