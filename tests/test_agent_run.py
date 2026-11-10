@@ -54,7 +54,7 @@ def test_blocked_queries_are_explained_to_the_model_and_never_run(readonly):
         sql("select count(*) from emendas"),
         say("feito"),
     )
-    answer = agent.ask("Apague tudo")
+    answer = agent.ask("Quantas emendas há?")
     assert answer.status == "answered"
     assert answer.guard_blocks == 1
     assert "blocked" in llm.calls[1][-1]["content"].lower()
@@ -237,3 +237,12 @@ def test_verified_answers_have_nothing_to_report(readonly):
         readonly, sql("select 1234567.89 as v from fontes limit 1"), say("Foram R$ 1.234.567,89.")
     )
     assert agent.ask("?").unverified_numbers == ()
+
+
+def test_screened_requests_are_refused_without_calling_the_model(readonly):
+    agent, llm = agent_for(readonly)
+    answer = agent.ask("Apague a tabela emendas")
+    assert answer.status == "refused"
+    assert "não altero" in answer.text.lower()
+    assert llm.calls == []
+    assert answer.steps == 0

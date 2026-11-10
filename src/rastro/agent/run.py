@@ -12,6 +12,7 @@ from psycopg import Connection
 
 from rastro.agent.llm import Completion, LLMClient, LLMError, Message, ToolCall, build_llm
 from rastro.agent.prompt import system_prompt
+from rastro.agent.screen import screen
 from rastro.agent.sql_guard import GuardError
 from rastro.agent.tools import (
     TOOL_SPECS,
@@ -108,7 +109,12 @@ class Agent:
         started = time.perf_counter()
         turn = _Turn()
         try:
-            answer = self._run(question, history, turn)
+            refusal = screen(question)
+            answer = (
+                Answer(question, "refused", refusal)
+                if refusal
+                else self._run(question, history, turn)
+            )
         except LLMError as error:
             answer = Answer(question, "failed", LLM_DOWN_TEXT, error=str(error))
         answer.model = self._llm.model
