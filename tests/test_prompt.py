@@ -52,3 +52,19 @@ def test_prompt_states_how_to_read_ambiguous_terms(readonly):
     assert "use valor_pago" in prompt
     assert "Use convenios só quando" in prompt
     assert "Nunca filtre localidade_tipo em perguntas sobre o estado todo" in prompt
+
+
+def test_prompt_explains_when_to_use_the_special_transfer_tables(readonly):
+    prompt = system_prompt(readonly, TODAY)
+    assert "Tabela transferencias_especiais:" in prompt
+    assert "Tabela transferencias_especiais_empenhos:" in prompt
+    assert "Transferegov" in prompt
+    assert "valor_planejado é o previsto no plano" in prompt
+    assert "não inclui minutas" in prompt
+    assert "Nelas não há valor pago" in prompt
+    assert "Pago por município de transferência especial não existe" in prompt
+    assert "impedido" in prompt
+
+
+def test_prompt_forbids_filters_the_question_did_not_ask_for(readonly):
+    assert "Não acrescente filtros" in system_prompt(readonly, TODAY)

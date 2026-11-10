@@ -18,6 +18,10 @@ from rastro.agent.sql_guard import GuardError, guard_sql
         "select 1 -- comment\n from emendas",
         "select * from EMENDAS",
         "select * from fontes",
+        "select municipio, sum(valor_planejado) from transferencias_especiais group by 1",
+        "select sum(valor) from mart.transferencias_especiais_empenhos where ano_emissao = 2025",
+        "select * from transferencias_especiais t join transferencias_especiais_empenhos e "
+        "on e.id_plano_acao = t.id_plano_acao",
     ],
 )
 def test_valid_selects_are_accepted(query):

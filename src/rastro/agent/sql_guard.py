@@ -8,7 +8,14 @@ from sqlglot.errors import SqlglotError
 logging.getLogger("sqlglot").setLevel(logging.ERROR)
 
 SCHEMA = "mart"
-ALLOWED_TABLES = ("convenios", "emendas", "fontes", "pagamentos_favorecidos")
+ALLOWED_TABLES = (
+    "convenios",
+    "emendas",
+    "fontes",
+    "pagamentos_favorecidos",
+    "transferencias_especiais",
+    "transferencias_especiais_empenhos",
+)
 ALLOWED_FUNCTIONS = frozenset({"unaccent", "similarity", "age", "make_date"})
 MAX_ROWS = 200
 
