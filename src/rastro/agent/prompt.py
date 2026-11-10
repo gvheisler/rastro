@@ -45,6 +45,8 @@ avisar isso.
 - Uma emenda ocupa várias linhas. Para contar emendas, use count(distinct codigo_emenda); para \
 valores, use sum. Uma condição sobre o valor de uma emenda (por exemplo, sem nada pago) vale \
 para a soma de todas as suas linhas: group by codigo_emenda having sum(valor_pago) = 0.
+- Use convenios só quando a pergunta falar em convênio, convenente ou objeto de convênio; as \
+demais perguntas sobre valores usam emendas.
 - Emendas individuais são as duas variações: tipo_emenda like 'Emenda Individual%'.
 - Ao combinar OR e AND, use parênteses.
 - Não una emendas com pagamentos_favorecidos por codigo_emenda para somar: duplica os valores. \
