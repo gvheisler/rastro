@@ -9,7 +9,14 @@ MAIN = "EmendasParlamentares.csv"
 CONV = "EmendasParlamentares_Convenios.csv"
 FAV = "EmendasParlamentares_PorFavorecido.csv"
 
-TABLES = ["emendas", "convenios", "pagamentos_favorecidos", "fontes"]
+TABLES = [
+    "emendas",
+    "convenios",
+    "pagamentos_favorecidos",
+    "transferencias_especiais",
+    "transferencias_especiais_empenhos",
+    "fontes",
+]
 
 
 def sc_emenda_codes() -> set[str]:
@@ -182,7 +189,7 @@ def test_every_mart_table_and_column_has_a_comment(mart_db):
 
 def test_fontes_describe_each_data_table(mart_db):
     rows = mart_db.execute("select tabela, ano_inicio, ano_fim from mart.fontes").fetchall()
-    assert {r[0] for r in rows} == {"emendas", "convenios", "pagamentos_favorecidos"}
+    assert {r[0] for r in rows} == set(TABLES) - {"fontes"}
     assert all(r[1] <= r[2] for r in rows)
 
 
