@@ -79,7 +79,8 @@ TOOL_SPECS: list[dict[str, Any]] = [
         "function": {
             "name": "refuse",
             "description": (
-                "Recusa com educação um pedido fora do escopo. Encerra a conversa nesta rodada."
+                "Recusa um pedido fora do escopo. O texto vai direto ao usuário: uma frase educada "
+                "em português. Encerra a conversa nesta rodada."
             ),
             "parameters": {
                 "type": "object",

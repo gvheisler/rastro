@@ -128,7 +128,8 @@ comment on column mart.emendas.ano is 'Ano da emenda no orçamento (2014 a 2026;
 comment on column mart.emendas.tipo_emenda is
     'Valores: ''Emenda Individual - Transferências com Finalidade Definida'', '
     '''Emenda Individual - Transferências Especiais'', ''Emenda de Bancada'', '
-    '''Emenda de Comissão'', ''Emenda de Relator''.';
+    '''Emenda de Comissão'', ''Emenda de Relator''. As emendas individuais são as duas primeiras: '
+    'tipo_emenda like ''Emenda Individual%''.';
 comment on column mart.emendas.autor is
     'Nome do parlamentar, da bancada ou da comissão autora, em maiúsculas. Nulo quando não informado.';
 comment on column mart.emendas.numero_emenda is 'Número da emenda dentro do ano e do autor.';

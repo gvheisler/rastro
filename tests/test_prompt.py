@@ -42,3 +42,11 @@ def test_prompt_names_the_tools_and_the_rules(readonly):
 def test_prompt_is_deterministic_and_fits_a_small_context(readonly):
     assert system_prompt(readonly, TODAY) == system_prompt(readonly, TODAY)
     assert len(system_prompt(readonly, TODAY)) < 16000
+
+
+def test_prompt_states_how_to_read_ambiguous_terms(readonly):
+    prompt = system_prompt(readonly, TODAY)
+    assert "like 'Emenda Individual%'" in prompt
+    assert "having sum(valor_pago) = 0" in prompt
+    assert "parênteses" in prompt
+    assert "use valor_pago" in prompt
