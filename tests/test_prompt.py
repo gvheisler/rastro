@@ -51,3 +51,4 @@ def test_prompt_states_how_to_read_ambiguous_terms(readonly):
     assert "parênteses" in prompt
     assert "use valor_pago" in prompt
     assert "Use convenios só quando" in prompt
+    assert "Nunca filtre localidade_tipo em perguntas sobre o estado todo" in prompt

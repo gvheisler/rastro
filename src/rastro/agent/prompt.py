@@ -35,6 +35,9 @@ o padrão das regras abaixo e diga qual critério usou. Se citar itens de um ran
 ordem do resultado.
 
 REGRAS DOS DADOS
+- As tabelas já têm só Santa Catarina: "para SC" ou "em Santa Catarina" não pede filtro nenhum. \
+Nunca filtre localidade_tipo em perguntas sobre o estado todo; só filtre quando a pergunta falar \
+de município.
 - Pergunta sobre "valores de ANO" (pago, empenhado, liquidado): use emendas.ano, o ano da emenda \
 no orçamento, e a coluna do valor pedido. Se a pergunta falar em gasto ou recursos sem dizer \
 qual valor, use valor_pago e diga isso. Pagamentos por mês ou ano de lançamento, e quanto cada \
