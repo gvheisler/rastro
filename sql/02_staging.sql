@@ -132,6 +132,66 @@ select
     staging.dinheiro(p.valor_recebido) as valor_recebido
 from raw.emendas_por_favorecido p;
 
+create table staging.transferegov_beneficiarios as
+select
+    id_beneficiario::integer as id_beneficiario,
+    upper(staging.nulo(uf_beneficiario)) as uf_sigla,
+    staging.nulo(nome_beneficiario) as nome,
+    staging.nulo(cnpj_beneficiario) as cnpj
+from raw.transferegov_beneficiarios;
+
+create table staging.transferegov_planos_acao as
+select
+    id_plano_acao::integer as id_plano_acao,
+    staging.nulo(codigo_plano_acao) as codigo_plano,
+    ano_plano_acao::smallint as ano_plano,
+    staging.nulo(situacao_plano_acao) as situacao,
+    data_aceite_plano_acao::date as data_aceite,
+    staging.nulo(motivo_impedimento_plano_acao) as motivo_impedimento,
+    staging.nulo(nome_parlamentar_emenda_plano_acao) as nome_parlamentar,
+    ano_emenda_parlamentar_plano_acao::smallint as ano_emenda,
+    staging.nulo(numero_emenda_parlamentar_plano_acao) as codigo_emenda,
+    staging.dinheiro(valor_custeio_plano_acao) as valor_custeio,
+    staging.dinheiro(valor_investimento_plano_acao) as valor_investimento,
+    staging.nulo(categoria_despesa_plano_acao) as categoria_despesa,
+    staging.nulo(codigo_descricao_areas_politicas_publicas_plano_acao) as areas_politicas,
+    staging.nulo(nome_objeto) as nome_objeto,
+    staging.nulo(detalhamento_objeto) as detalhamento_objeto,
+    id_beneficiario::integer as id_beneficiario
+from raw.transferegov_planos_acao;
+
+create table staging.transferegov_executores as
+select
+    id_executor::integer as id_executor,
+    id_plano_acao::integer as id_plano_acao,
+    staging.nulo(cnpj_executor) as cnpj,
+    staging.nulo(nome_executor) as nome,
+    staging.nulo(objeto_executor) as objeto
+from raw.transferegov_executores;
+
+create table staging.transferegov_planos_trabalho as
+select
+    id_plano_trabalho::integer as id_plano_trabalho,
+    id_plano_acao::integer as id_plano_acao,
+    staging.nulo(situacao_plano_trabalho) as situacao,
+    data_inicio_execucao_plano_trabalho::date as data_inicio_execucao,
+    data_fim_execucao_plano_trabalho::date as data_fim_execucao,
+    prazo_execucao_meses_plano_trabalho::smallint as prazo_meses
+from raw.transferegov_planos_trabalho;
+
+create table staging.transferegov_empenhos as
+select
+    id_empenho::integer as id_empenho,
+    id_plano_acao::integer as id_plano_acao,
+    staging.nulo(numero_empenho) as numero_empenho,
+    situacao_empenho::smallint as situacao_codigo,
+    staging.nulo(descricao_situacao_empenho) as situacao,
+    staging.nulo(descricao_tipo_documento_empenho) as tipo_documento,
+    data_emissao_empenho::date as data_emissao,
+    staging.nulo(categoria_despesa_empenho) as categoria_despesa,
+    staging.dinheiro(valor_empenho) as valor
+from raw.transferegov_empenhos;
+
 create index on staging.emendas (codigo_emenda);
 create index on staging.emendas (uf_sigla);
 create index on staging.convenios (codigo_emenda);
@@ -140,3 +200,16 @@ create index on staging.pagamentos_favorecido (codigo_emenda);
 analyze staging.emendas;
 analyze staging.convenios;
 analyze staging.pagamentos_favorecido;
+
+create index on staging.transferegov_planos_acao (id_plano_acao);
+create index on staging.transferegov_planos_acao (codigo_emenda);
+create index on staging.transferegov_planos_acao (id_beneficiario);
+create index on staging.transferegov_executores (id_plano_acao);
+create index on staging.transferegov_planos_trabalho (id_plano_acao);
+create index on staging.transferegov_empenhos (id_plano_acao);
+
+analyze staging.transferegov_planos_acao;
+analyze staging.transferegov_beneficiarios;
+analyze staging.transferegov_executores;
+analyze staging.transferegov_planos_trabalho;
+analyze staging.transferegov_empenhos;
