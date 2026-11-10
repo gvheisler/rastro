@@ -1,4 +1,4 @@
-.PHONY: env up down psql setup ingest check model lint fmt test
+.PHONY: env up down psql setup ingest check model app lint fmt test
 
 RAW_FILE := data/raw/EmendasParlamentares.csv
 
@@ -25,6 +25,9 @@ check:
 
 model:
 	ollama create rastro-sql -f Modelfile
+
+app: up
+	uv run streamlit run src/rastro/app/streamlit_app.py
 
 psql: env
 	docker compose exec db sh -c 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'

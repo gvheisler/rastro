@@ -12,6 +12,7 @@ dependencies = [
     "psycopg[binary]>=3.2",
     "pydantic-settings>=2.6",
     "sqlglot>=30.30.0",
+    "streamlit>=1.67.0",
     "typer>=0.15",
 ]
 
