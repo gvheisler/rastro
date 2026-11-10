@@ -73,6 +73,36 @@ def test_known_source_quirks_are_reported_as_info_not_as_failures(mart_db):
             "delete from mart.emendas where ctid = (select min(ctid) from mart.emendas)",
             "mart_rows_differ_from_staging",
         ),
+        (
+            "insert into mart.transferencias_especiais "
+            "select * from mart.transferencias_especiais limit 1",
+            "transferencias_duplicate_plans",
+        ),
+        (
+            "update mart.transferencias_especiais set valor_custeio = -1 "
+            "where ctid = (select min(ctid) from mart.transferencias_especiais)",
+            "transferencias_negative_amounts",
+        ),
+        (
+            "update mart.transferencias_especiais_empenhos set valor = -1 "
+            "where ctid = (select min(ctid) from mart.transferencias_especiais_empenhos)",
+            "transferencias_negative_amounts",
+        ),
+        (
+            "update mart.transferencias_especiais set valor_planejado = null "
+            "where ctid = (select min(ctid) from mart.transferencias_especiais)",
+            "transferencias_null_amounts",
+        ),
+        (
+            "delete from mart.transferencias_especiais_empenhos "
+            "where ctid = (select min(ctid) from mart.transferencias_especiais_empenhos)",
+            "transferencias_rows_differ_from_staging",
+        ),
+        (
+            "update mart.transferencias_especiais set objeto = 'cpf 12345678901' "
+            "where ctid = (select min(ctid) from mart.transferencias_especiais)",
+            "cpf_like_text",
+        ),
     ],
 )
 def test_each_problem_is_detected(mart_db, statement, expected):
@@ -97,3 +127,10 @@ def test_check_command_fails_when_a_check_fails(mart_db, monkeypatch):
     result = runner.invoke(app, ["check"])
     assert result.exit_code == 1
     assert "emendas_year_out_of_range" in result.output
+
+
+def test_special_transfer_quirks_are_info(mart_db):
+    results = {r.check.name: r for r in run_checks(mart_db)}
+    for name in ("transferencias_with_drafts", "transferencias_municipality_not_in_portal"):
+        assert results[name].check.severity == "info"
+    assert results["transferencias_with_drafts"].count > 0

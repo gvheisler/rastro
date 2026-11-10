@@ -18,6 +18,16 @@ TEXT_COLUMNS = {
         "natureza_juridica",
         "municipio_favorecido",
     ],
+    "transferencias_especiais": [
+        "autor",
+        "beneficiario",
+        "municipio",
+        "executor",
+        "objeto",
+        "detalhamento_objeto",
+        "motivo_impedimento",
+    ],
+    "transferencias_especiais_empenhos": ["autor", "beneficiario", "municipio"],
 }
 EMENDA_KEY = "codigo_emenda, localidade, funcao, subfuncao, programa, acao, plano_orcamentario"
 SC_EMENDA_CODES = (
@@ -127,6 +137,43 @@ CHECKS = [
         f" where codigo_emenda in ({SC_EMENDA_CODES})))",
     ),
     Check(
+        "transferencias_duplicate_plans",
+        "error",
+        "Extra rows repeating the same Transferegov action plan",
+        "select coalesce(sum(n - 1), 0) from (select count(*) n from mart.transferencias_especiais "
+        "group by id_plano_acao having count(*) > 1) d",
+    ),
+    Check(
+        "transferencias_null_amounts",
+        "error",
+        "Planned or committed amount of a special-transfer plan is null",
+        "select count(*) from mart.transferencias_especiais where valor_planejado is null "
+        "or valor_empenhado is null or valor_em_minuta is null",
+    ),
+    Check(
+        "transferencias_negative_amounts",
+        "error",
+        "Negative amount in a special-transfer plan or commitment",
+        "select (select count(*) from mart.transferencias_especiais "
+        "where valor_custeio < 0 or valor_investimento < 0 or valor_empenhado < 0"
+        " or valor_em_minuta < 0)"
+        " + (select count(*) from mart.transferencias_especiais_empenhos where valor < 0)",
+    ),
+    Check(
+        "transferencias_rows_differ_from_staging",
+        "error",
+        "Special-transfer rows in the mart differ from those of Santa Catarina in staging",
+        "select abs((select count(*) from mart.transferencias_especiais)"
+        " - (select count(*) from staging.transferegov_planos_acao p"
+        " join staging.transferegov_beneficiarios b using (id_beneficiario)"
+        " where b.uf_sigla = 'SC'))"
+        " + abs((select count(*) from mart.transferencias_especiais_empenhos)"
+        " - (select count(*) from staging.transferegov_empenhos e"
+        " join staging.transferegov_planos_acao p using (id_plano_acao)"
+        " join staging.transferegov_beneficiarios b using (id_beneficiario)"
+        " where b.uf_sigla = 'SC'))",
+    ),
+    Check(
         "emendas_without_code",
         "info",
         "Rows with no amendment code in the source; they cannot be linked to other tables",
@@ -157,6 +204,20 @@ CHECKS = [
         "info",
         "Payment rows with a negative amount (reversals in the source)",
         "select count(*) from mart.pagamentos_favorecidos where valor_recebido < 0",
+    ),
+    Check(
+        "transferencias_with_drafts",
+        "info",
+        "Plans with commitment drafts (minutas) not yet sent",
+        "select count(*) from mart.transferencias_especiais where valor_em_minuta > 0",
+    ),
+    Check(
+        "transferencias_municipality_not_in_portal",
+        "info",
+        "Municipal plans whose municipality has no IBGE code because the Portal lists no "
+        "amendment for it",
+        "select count(*) from mart.transferencias_especiais "
+        "where municipio is not null and codigo_municipio_ibge is null",
     ),
 ]
 
