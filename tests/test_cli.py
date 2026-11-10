@@ -20,3 +20,10 @@ def test_ingest_explains_how_to_get_missing_files(db, monkeypatch, tmp_path):
     result = runner.invoke(app, ["ingest", "--raw-dir", str(tmp_path)])
     assert result.exit_code == 1
     assert "download_federal.py" in result.output
+
+
+def test_ingest_builds_the_mart(db, monkeypatch):
+    monkeypatch.setenv("POSTGRES_DB", db.info.dbname)
+    result = runner.invoke(app, ["ingest", "--raw-dir", str(FIXTURES)])
+    assert result.exit_code == 0, result.output
+    assert db.execute("select count(*) from mart.emendas").fetchone()[0] > 0

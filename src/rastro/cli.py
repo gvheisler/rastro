@@ -6,6 +6,7 @@ import typer
 from rastro.config import RAW_DIR
 from rastro.db import apply_sql, connect
 from rastro.ingest.federal import FILES, load_raw
+from rastro.mart import build_mart
 
 app = typer.Typer(no_args_is_help=True, add_completion=False, help="Rastro data pipeline.")
 
@@ -21,7 +22,7 @@ def ingest(
         Path, typer.Option(help="Directory with the Portal da Transparência CSVs.")
     ] = RAW_DIR,
 ) -> None:
-    """Load the federal CSVs into the raw schema and rebuild staging."""
+    """Load the federal CSVs into raw, then rebuild staging and the mart."""
     missing = [name for name in FILES if not (raw_dir / name).exists()]
     if missing:
         typer.echo(
@@ -35,6 +36,7 @@ def ingest(
         apply_sql(conn, "01_raw.sql")
         loaded = load_raw(conn, raw_dir)
         apply_sql(conn, "02_staging.sql")
+        build_mart(conn)
 
     for name, rows in loaded.items():
         typer.echo(f"{name}: {rows:,} rows")
