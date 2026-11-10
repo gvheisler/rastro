@@ -1,9 +1,16 @@
+import pytest
 from typer.testing import CliRunner
 
 from rastro.cli import app
+from rastro.ingest.transferegov import TransferegovError
 from support import FIXTURES, read_csv
 
 runner = CliRunner()
+
+
+@pytest.fixture(autouse=True)
+def fake_transferegov(monkeypatch, transferegov_client):
+    monkeypatch.setattr("rastro.cli.build_transferegov_client", lambda: transferegov_client)
 
 
 def test_ingest_loads_raw_and_builds_staging(db, monkeypatch):
@@ -13,6 +20,40 @@ def test_ingest_loads_raw_and_builds_staging(db, monkeypatch):
     rows = len(read_csv("EmendasParlamentares.csv")[1])
     assert f"EmendasParlamentares.csv: {rows:,} rows" in result.output
     assert db.execute("select count(*) from staging.emendas").fetchone()[0] == rows
+
+
+def test_ingest_loads_santa_catarina_from_transferegov(db, monkeypatch):
+    monkeypatch.setenv("POSTGRES_DB", db.info.dbname)
+    result = runner.invoke(app, ["ingest", "--raw-dir", str(FIXTURES)])
+    assert result.exit_code == 0, result.output
+    assert "transferegov_planos_acao:" in result.output
+    assert db.execute("select count(*) from staging.transferegov_planos_acao").fetchone()[0] > 0
+
+
+def test_ingest_can_skip_transferegov(db, monkeypatch):
+    def unavailable():
+        raise AssertionError("the API must not be contacted")
+
+    monkeypatch.setattr("rastro.cli.build_transferegov_client", unavailable)
+    monkeypatch.setenv("POSTGRES_DB", db.info.dbname)
+    result = runner.invoke(app, ["ingest", "--raw-dir", str(FIXTURES), "--skip-transferegov"])
+    assert result.exit_code == 0, result.output
+    assert "transferegov" not in result.output
+    assert db.execute("select count(*) from staging.transferegov_planos_acao").fetchone()[0] == 0
+
+
+def test_ingest_stops_before_loading_anything_when_the_api_fails(db, monkeypatch):
+    class Broken:
+        def rows(self, *args, **kwargs):
+            raise TransferegovError("beneficiarios-especiais: gave up after 6 attempts (HTTP 500)")
+
+    monkeypatch.setattr("rastro.cli.build_transferegov_client", lambda: Broken())
+    monkeypatch.setenv("POSTGRES_DB", db.info.dbname)
+    result = runner.invoke(app, ["ingest", "--raw-dir", str(FIXTURES)])
+    assert result.exit_code == 1
+    assert "gave up after 6 attempts" in result.output
+    assert "--skip-transferegov" in result.output
+    assert db.execute("select count(*) from raw.emendas_parlamentares").fetchone()[0] == 0
 
 
 def test_ingest_explains_how_to_get_missing_files(db, monkeypatch, tmp_path):

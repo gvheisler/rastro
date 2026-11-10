@@ -5,9 +5,15 @@ import typer
 
 from rastro.agent.run import Answer, build_agent
 from rastro.agent.tools import format_table
-from rastro.config import RAW_DIR
+from rastro.config import RAW_DIR, get_settings
 from rastro.db import apply_sql, connect
 from rastro.ingest.federal import FILES, load_raw
+from rastro.ingest.load import SchemaMismatchError
+from rastro.ingest.transferegov import (
+    TransferegovClient,
+    TransferegovError,
+    load_raw_transferegov,
+)
 from rastro.mart import build_mart
 from rastro.quality.checks import run_checks
 
@@ -19,13 +25,23 @@ def main() -> None:
     """Rastro data pipeline."""
 
 
+def build_transferegov_client() -> TransferegovClient:
+    return TransferegovClient(get_settings().transferegov_base_url)
+
+
 @app.command()
 def ingest(
     raw_dir: Annotated[
         Path, typer.Option(help="Directory with the Portal da Transparência CSVs.")
     ] = RAW_DIR,
+    skip_transferegov: Annotated[
+        bool,
+        typer.Option(
+            "--skip-transferegov", help="Do not download Transferegov; keep what is already in raw."
+        ),
+    ] = False,
 ) -> None:
-    """Load the federal CSVs into raw, then rebuild staging and the mart."""
+    """Load the federal CSVs and Transferegov into raw, then rebuild staging and the mart."""
     missing = [name for name in FILES if not (raw_dir / name).exists()]
     if missing:
         typer.echo(
@@ -37,7 +53,18 @@ def ingest(
 
     with connect() as conn:
         apply_sql(conn, "01_raw.sql")
-        loaded = load_raw(conn, raw_dir)
+        loaded: dict[str, int] = {}
+        if not skip_transferegov:
+            try:
+                loaded |= load_raw_transferegov(conn, build_transferegov_client())
+            except (TransferegovError, SchemaMismatchError) as error:
+                typer.echo(
+                    f"Transferegov: {error}. Try again later, or use --skip-transferegov "
+                    "to rebuild with what is already loaded.",
+                    err=True,
+                )
+                raise typer.Exit(1) from error
+        loaded |= load_raw(conn, raw_dir)
         apply_sql(conn, "02_staging.sql")
         build_mart(conn)
 
