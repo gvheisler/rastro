@@ -1,37 +1,13 @@
 from datetime import date
-from decimal import Decimal
 
 import pytest
 
 from rastro.db import apply_sql
-from rastro.ingest.federal import load_raw
-from support import FIXTURES, read_csv
+from support import column, money, scalar
 
 MAIN = "EmendasParlamentares.csv"
 CONV = "EmendasParlamentares_Convenios.csv"
 FAV = "EmendasParlamentares_PorFavorecido.csv"
-
-
-@pytest.fixture
-def staging_db(db):
-    apply_sql(db, "01_raw.sql")
-    load_raw(db, FIXTURES)
-    apply_sql(db, "02_staging.sql")
-    return db
-
-
-def column(filename: str, name: str) -> list[str]:
-    header, rows = read_csv(filename)
-    i = header.index(name)
-    return [r[i] for r in rows]
-
-
-def money(text: str) -> Decimal:
-    return Decimal(text.replace(",", "."))
-
-
-def scalar(conn, query: str, params=None):
-    return conn.execute(query, params).fetchone()[0]
 
 
 @pytest.mark.parametrize(

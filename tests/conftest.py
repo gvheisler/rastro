@@ -7,6 +7,9 @@ from psycopg import sql
 from pydantic import ValidationError
 
 from rastro.config import get_settings
+from rastro.db import apply_sql
+from rastro.ingest.federal import load_raw
+from support import FIXTURES
 
 
 @pytest.fixture
@@ -29,3 +32,11 @@ def db():
         conn.close()
         admin.execute(sql.SQL("drop database {} with (force)").format(sql.Identifier(name)))
         admin.close()
+
+
+@pytest.fixture
+def staging_db(db):
+    apply_sql(db, "01_raw.sql")
+    load_raw(db, FIXTURES)
+    apply_sql(db, "02_staging.sql")
+    return db
