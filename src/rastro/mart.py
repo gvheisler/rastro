@@ -23,6 +23,7 @@ def build_mart(conn: Connection) -> None:
             )
         )
         conn.execute(sql.SQL("alter role {} set search_path = mart, public").format(role))
+        conn.execute(sql.SQL("alter role {} set default_transaction_read_only = on").format(role))
         apply_sql(conn, "03_mart.sql")
         conn.execute(sql.SQL("grant usage on schema mart to {}").format(role))
         conn.execute(sql.SQL("grant select on all tables in schema mart to {}").format(role))

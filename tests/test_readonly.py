@@ -5,15 +5,6 @@ from rastro.db import connect_readonly
 from rastro.mart import build_mart
 
 
-@pytest.fixture
-def readonly(staging_db, monkeypatch):
-    build_mart(staging_db)
-    staging_db.commit()
-    monkeypatch.setenv("POSTGRES_DB", staging_db.info.dbname)
-    with connect_readonly() as conn:
-        yield conn
-
-
 def test_readonly_role_reads_the_mart_without_schema_prefix(readonly):
     assert readonly.execute("select count(*) from emendas").fetchone()[0] > 0
 
@@ -59,3 +50,7 @@ def test_rebuilding_the_mart_keeps_the_grants(staging_db, monkeypatch):
     monkeypatch.setenv("POSTGRES_DB", staging_db.info.dbname)
     with connect_readonly() as conn:
         assert conn.execute("select count(*) from emendas").fetchone()[0] > 0
+
+
+def test_readonly_role_defaults_to_read_only_transactions(readonly):
+    assert readonly.execute("show default_transaction_read_only").fetchone() == ("on",)

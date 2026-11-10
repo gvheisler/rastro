@@ -7,8 +7,9 @@ from psycopg import sql
 from pydantic import ValidationError
 
 from rastro.config import get_settings
-from rastro.db import apply_sql
+from rastro.db import apply_sql, connect_readonly
 from rastro.ingest.federal import load_raw
+from rastro.mart import build_mart
 from support import FIXTURES
 
 
@@ -46,3 +47,13 @@ def staging_db(db):
 def mart_db(staging_db):
     apply_sql(staging_db, "03_mart.sql")
     return staging_db
+
+
+@pytest.fixture
+def readonly(staging_db, monkeypatch):
+    """A read-only connection to a freshly built mart."""
+    build_mart(staging_db)
+    staging_db.commit()
+    monkeypatch.setenv("POSTGRES_DB", staging_db.info.dbname)
+    with connect_readonly() as conn:
+        yield conn
