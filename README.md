@@ -18,8 +18,8 @@ O Rastro carrega os dados públicos em um banco Postgres e usa um agente de IA p
 
 Em desenvolvimento.
 
-- Pronto: Postgres local com Docker Compose, download dos dados federais, carga nas camadas `raw`, `staging` e `mart` (Santa Catarina), checks de qualidade, agente texto→SQL com modelo local e chat em Streamlit, com testes.
-- Falta: transferências especiais (Transferegov), reconciliação com o painel do TCE/SC, avaliação com perguntas e gabarito, e a comparação com a API do Claude.
+- Pronto: Postgres local com Docker Compose, download dos dados federais, carga das transferências especiais do Transferegov, camadas `raw`, `staging` e `mart` (Santa Catarina), checks de qualidade, agente texto→SQL com modelo local e chat em Streamlit, com testes.
+- Falta: reconciliação com o painel do TCE/SC, avaliação com perguntas e gabarito, e a comparação com a API do Claude.
 
 ## Como rodar
 
@@ -27,16 +27,16 @@ Requisitos: Docker, [uv](https://docs.astral.sh/uv/), Python 3.12 e [Ollama](htt
 
 ```
 make setup    # sobe o Postgres (porta 5433) e instala as dependências
-make ingest   # baixa os dados se necessário e monta raw, staging e mart
+make ingest   # baixa os dados federais se necessário, consulta o Transferegov e monta raw, staging e mart
 make check    # checks de qualidade sobre o mart
 make model    # cria o modelo rastro-sql no Ollama (qwen3:8b com contexto de 8192 tokens)
 make app      # abre o chat em http://localhost:8501
 make test
 ```
 
-`make ingest` pode ser repetido: cada execução recarrega as tabelas sem duplicar linhas. `make psql` abre um console no banco. Para perguntar pelo terminal: `uv run rastro ask "Quanto foi pago em emendas em 2024?"`.
+`make ingest` pode ser repetido: cada execução recarrega as tabelas sem duplicar linhas. A consulta ao Transferegov leva alguns minutos; `uv run rastro ingest --skip-transferegov` reconstrói sem ela, com o que já está no banco. `make psql` abre um console no banco. Para perguntar pelo terminal: `uv run rastro ask "Quanto foi pago em emendas em 2024?"`.
 
-Os dados passam por três camadas: `raw` guarda os CSVs como texto, exatamente como vieram do Portal da Transparência; `staging` aplica tipos, trata valores ausentes e padroniza categorias; `mart` tem só Santa Catarina, com nomes em português e pessoas físicas sem nome. Detalhes em [`docs/data-dictionary.md`](docs/data-dictionary.md).
+Os dados passam por três camadas: `raw` guarda os CSVs do Portal da Transparência e as respostas da API do Transferegov (só Santa Catarina) como texto, exatamente como vieram; `staging` aplica tipos, trata valores ausentes e padroniza categorias; `mart` tem só Santa Catarina, com nomes em português e pessoas físicas sem nome. Detalhes em [`docs/data-dictionary.md`](docs/data-dictionary.md).
 
 ## Como o agente responde
 
@@ -51,7 +51,7 @@ O cliente usa a API de chat compatível com OpenAI. Foi testado com o Ollama; ou
 ## Fontes dos dados
 
 - [Portal da Transparência (CGU): emendas parlamentares](https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares)
-- [Transferegov: transferências especiais](https://www.gov.br/transferegov)
+- [Transferegov: API de dados abertos das transferências especiais](https://api-publica.transferegov.gestao.gov.br/especiais/docs)
 - Painel do TCE/SC (Farol TCE): usado apenas para reconciliação dos valores.
 
 Detalhes de cada arquivo, data do download e checksums em [`data/README.md`](data/README.md).

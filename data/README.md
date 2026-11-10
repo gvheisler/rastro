@@ -22,6 +22,24 @@ O script usa o link direto `https://portaldatransparencia.gov.br/download-de-dad
 
 Formato: ISO-8859-1, separador `;`, aspas duplas, linhas terminadas em CRLF, decimal com vírgula e datas em dd/mm/aaaa. Colunas e regras de filtro de SC em [`docs/data-dictionary.md`](../docs/data-dictionary.md).
 
+## Transferências especiais (Transferegov)
+
+API de dados abertos do módulo de Transferências Especiais do Transferegov: https://api-publica.transferegov.gestao.gov.br/especiais (documentação em `/especiais/docs`). Não há arquivo para baixar: `make ingest` consulta a API e carrega só Santa Catarina em `raw.transferegov_*`. Para pular o Transferegov e reconstruir com o que já está no banco: `uv run rastro ingest --skip-transferegov`. A URL base pode ser trocada em `TRANSFEREGOV_BASE_URL` no `.env`.
+
+Consultada em 10/11/2026; a API informou atualização em 10/11/2026.
+
+| Endpoint | Linhas de SC |
+| --- | --- |
+| `beneficiarios-especiais` | 296 |
+| `planos-acao-especiais` | 3.654 |
+| `executores-especiais` | 3.616 |
+| `planos-trabalho-especiais` | 3.608 |
+| `empenhos-especiais` | 3.693 |
+
+Como não há arquivo, o SHA-256 de cada carga (do conteúdo recebido, ordenado pelo id) fica em `raw.cargas`, junto com o número de linhas e a data de atualização da API. Os campos carregados e as verificações estão em [`docs/data-dictionary.md`](../docs/data-dictionary.md).
+
 ## Amostra de teste
 
 `tests/fixtures/` tem uma amostra dos três arquivos, no mesmo formato: cerca de 260 linhas de SC e 40 de outros estados, mais as linhas relacionadas nos outros dois arquivos. Pessoas físicas são mascaradas e linhas com sequência de 11 dígitos no nome são descartadas. Para gerar de novo: `uv run python scripts/make_fixture.py`.
+
+`tests/fixtures/transferegov/` tem uma amostra das respostas da API: 79 planos (a maioria de SC e dois de outro estado) com os executores, planos de trabalho e empenhos deles, incluindo os planos das emendas de transferência especial presentes na amostra do Portal. Planos com sequência de 11 dígitos em algum texto são descartados. Para gerar de novo, com acesso à API: `uv run python scripts/make_fixture_transferegov.py`.
