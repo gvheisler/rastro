@@ -9,8 +9,9 @@ from pydantic import ValidationError
 from rastro.config import get_settings
 from rastro.db import apply_sql, connect_readonly
 from rastro.ingest.federal import load_raw
+from rastro.ingest.transferegov import TransferegovClient, load_raw_transferegov
 from rastro.mart import build_mart
-from support import FIXTURES
+from support import API_BASE, FIXTURES, fake_transferegov, fixture_transferegov
 
 
 @pytest.fixture
@@ -36,9 +37,15 @@ def db():
 
 
 @pytest.fixture
-def staging_db(db):
+def transferegov_client():
+    return TransferegovClient(API_BASE, transport=fake_transferegov(fixture_transferegov()))
+
+
+@pytest.fixture
+def staging_db(db, transferegov_client):
     apply_sql(db, "01_raw.sql")
     load_raw(db, FIXTURES)
+    load_raw_transferegov(db, transferegov_client)
     apply_sql(db, "02_staging.sql")
     return db
 

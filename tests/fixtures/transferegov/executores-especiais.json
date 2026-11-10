@@ -1,0 +1,548 @@
+[
+ {
+  "id_executor": 54,
+  "id_plano_acao": 35169,
+  "cnpj_executor": "83102574000106",
+  "nome_executor": "MUNICIPIO DE RIO DO SUL",
+  "objeto_executor": "Requalificação viária de 1.705,26 m² da Rua Isaias Rossetti no Bairro Valada São Paulo, perímetro urbano  no Município de Rio do Sul/SC, em blocos intertravados, pavimentação dos passeios em concreto, drenagem pluvial e sinalização viária."
+ },
+ {
+  "id_executor": 406,
+  "id_plano_acao": 72762,
+  "cnpj_executor": "83102459000123",
+  "nome_executor": "MUNICIPIO DE JARAGUA DO SUL",
+  "objeto_executor": "Aquisição de quadra poliesportiva em madeira no sistema portátil flexível flutuante com amortecimento na Arena Jaraguá localizada na Rua Gustavo Hagedorn nº 636 – Nova Brasília – Jaraguá do Sul /SC,"
+ },
+ {
+  "id_executor": 977,
+  "id_plano_acao": 67993,
+  "cnpj_executor": "01613101000109",
+  "nome_executor": "MUNICIPIO DE SAO PEDRO DE ALCANTARA",
+  "objeto_executor": "Manutenção, Conservação e Recuperação das ruas Diácomo Bráz Hilleschein e complementos das ruas: Ambrósio Kuhn, Arnoldo Valdomiro, José Matias Junkes, Yolanda Vieira.Área urbana do Municipio de São Pedro de Alcântara/SC"
+ },
+ {
+  "id_executor": 1068,
+  "id_plano_acao": 16146,
+  "cnpj_executor": "17243084000197",
+  "nome_executor": "MUNICIPIO DE BALNEARIO RINCAO",
+  "objeto_executor": "Pavimentação em lajotas de concreto e meio fio em diversas ruas do Município de Balneário Rincão/SC localizadas no perímetro urbano."
+ },
+ {
+  "id_executor": 1408,
+  "id_plano_acao": 10435,
+  "cnpj_executor": "83102418000137",
+  "nome_executor": "MUNICIPIO DE IBIRAMA",
+  "objeto_executor": "Pavimentação da Rua Ilha Bela com 3.061,03m2 - Bairro Operário - Perímetro Urbano"
+ },
+ {
+  "id_executor": 1598,
+  "id_plano_acao": 20015,
+  "cnpj_executor": "83169623000110",
+  "nome_executor": "MUNICIPIO DE JOINVILLE",
+  "objeto_executor": "Contratação de empresa para construção da Vila da Saúde da Unidade Básica de Saúde da Família Itaum"
+ },
+ {
+  "id_executor": 1972,
+  "id_plano_acao": 70540,
+  "cnpj_executor": "75438655000145",
+  "nome_executor": "MUNICIPIO DE CORREIA PINTO",
+  "objeto_executor": "Pavimentação asfáltica no Perímetro Urbano  na Rua Guatemala Bairro São João, município de Correia Pinto /SC"
+ },
+ {
+  "id_executor": 3879,
+  "id_plano_acao": 68031,
+  "cnpj_executor": "83102855000150",
+  "nome_executor": "MUNICIPIO DE NAVEGANTES",
+  "objeto_executor": "Execução de drenagem pluvial e pavimentação asfáltica na RUA ELZA Z. PROVESI com tubulação PEAD de diâmetro 60 cm e travessas de bocas de lobo com tubos PEAD 30 cm e pavimentação de concreto betuminoso usinado a quente (CBUQ).Órgão: 02.000 – Prefeitura MunicipalUnidade: 016 – Secretaria Municipal de ObrasFunção: 15 - UrbanismoSubfunção: 451 – Infraestrutura urbanaPrograma: 0014 – Caminho do Desenvolvimento da Mobilidade UrbanaAção: 1008Dotação:  154Natureza da despesa: 4.4.90.00.00.00.00.00 Investimento para o 25º Batalhão de Polícia MilitarÓrgão: 02.000 – Prefeitura MunicipalUnidade: 003 - Secretaria de Articulação InterinstitucionalFunção: 4 – AdministraçãoSubfunção: 121 – Planejamento e orçamentoPrograma: 02 – Caminho do Desenvolvimento da Gestão PúblicaAção: 2087 - Manutenção e Funcionamento da Secretaria de ArticulaçãoDotação: 193 Natureza da despesa: 4.4.90.00.00.00.00.00"
+ },
+ {
+  "id_executor": 3880,
+  "id_plano_acao": 68031,
+  "cnpj_executor": "04238015000143",
+  "nome_executor": "FUNDACAO MUNICIPAL DE ESPORTE",
+  "objeto_executor": "Implantação de núcleo de atividades aquáticas para atendimento de crianças e idosos.Órgão: 04.000 – Fundação Municipal de EsportesUnidade: 001 - Fundação Municipal de EsportesFunção: 27 – Desporto e LazerSubfunção: 812 – Desporto ComunitárioPrograma: 06 – Caminho do Desenvolvimento do Turismo, Cultura e EsporteAção: 2050 – Manutenção e Funcionamento da Fundação de EsporteDotação: 04 Natureza da despesa: 3.3.90.00.00.00.00.00"
+ },
+ {
+  "id_executor": 5045,
+  "id_plano_acao": 74731,
+  "cnpj_executor": "83102285000107",
+  "nome_executor": "MUNICIPIO DE BALNEARIO CAMBORIU",
+  "objeto_executor": "Aquisição de materiais esportivos para as Unidades de ensino da Secretaria de Educação no Município de Balneário Camboriú/SC"
+ },
+ {
+  "id_executor": 6968,
+  "id_plano_acao": 31233,
+  "cnpj_executor": "81531162000158",
+  "nome_executor": "MUNICIPIO DE FORQUILHINHA",
+  "objeto_executor": "Construção do Parque União das famílias no bairro Nova York, município de Forquilhinha."
+ },
+ {
+  "id_executor": 7010,
+  "id_plano_acao": 17145,
+  "cnpj_executor": "82836057000190",
+  "nome_executor": "MUNICIPIO DE GAROPABA",
+  "objeto_executor": "PAVIMENTAÇÃO ASFÁLTICA DA RUA LUIZ ZANELATO, NO BAIRRO ENCANTADA. MUNICÍPIO DE GAROPABA/SC. ÁREA URBANA."
+ },
+ {
+  "id_executor": 7801,
+  "id_plano_acao": 37235,
+  "cnpj_executor": "82928706000182",
+  "nome_executor": "MUNICIPIO DE LAGUNA",
+  "objeto_executor": "PAVIMENTAÇÃO ASFÁLTICA, DRENAGEM PLUVIAL, PASSEIOS PÚBLICOS E SINALIZAÇÃO VIÁRIA DA AV. MAURÍLIO KFOURI, LOCALIZADA NO BAIRRO MAR GROSSO, PERÍMETRO URBANO DO MUNICÍPIO DE LAGUNA, (REEQUILÍBRIO) DA OBRA COM EXTENSÃO TOTAL DE 1.763,52M E PAVIMENTAÇÃO ASFÁLTICA DRENAGEM PLUVIAL, E SINALIZAÇÃO VIÁRIA DE TRECHO COM 194,91M² DA ESTRADA GERAL CAMPOS VERDES, BAIRRO DE CAMPOS VERDES, LOCALIZADA NO PERÍMETRO URBANO DO MUNICÍPIO DE LAGUNA-SC."
+ },
+ {
+  "id_executor": 7804,
+  "id_plano_acao": 42548,
+  "cnpj_executor": "82928706000182",
+  "nome_executor": "MUNICIPIO DE LAGUNA",
+  "objeto_executor": "Pavimentação asfáltica, drenagem pluvial e sinalização viária (Aditivo de Serviços) de trecho do  acesso à Praia do Sol, composto pelas Avenidas: Cláudio Horn, Léo Max Feuerschuette, Clodoaldo Antônio Althoff e trecho da Jaime Rodrigues, localizadas no perímetro urbano do município de Laguna-SC, cuja área total de pista é de 67.712,48m²;                               Pavimentação asfáltica, drenagem pluvial, passeios com acessibilidade e sinalização viária (Aditivo de Serviços) da Estrada Geral do Farol, localizada no bairro Farol, perímetro urbano do município de Laguna-SC, cuja área total de pista é de 5.508,57 m²;                           Pavimentação asfáltica, drenagem pluvial, e sinalização viária (Aditivo de Serviços) da Av. Maurílio Kfouri, localizada no bairro Mar Grosso, perímetro urbano do município de Laguna-SC, cuja área total de pista é de 42.779,56m²;                            Fresagem em asfalto pré-existente e aplicação de 5cm de CBUQ (Aditivo de Serviço) de trecho da Avenida Colombo Machado Salles, localizada no perímetro urbano do município de Laguna-SC, cuja área total de pista é de 498m de extensão;                                        Pavimentação asfáltica, drenagem pluvial, sinalização viária de trecho com 153,32m² da Estrada Geral de Campos Verdes, localizada no bairro de Campos Verdes, perímetro urbano do município de Laguna-SC"
+ },
+ {
+  "id_executor": 10232,
+  "id_plano_acao": 37011,
+  "cnpj_executor": "83102640000130",
+  "nome_executor": "MUNICIPIO DE ITUPORANGA",
+  "objeto_executor": "Pavimentação de trechos da Rua Ondino Souza – Bairro Gabiroba"
+ },
+ {
+  "id_executor": 10259,
+  "id_plano_acao": 68663,
+  "cnpj_executor": "83102517000119",
+  "nome_executor": "MUNICIPIO DE ITAIOPOLIS",
+  "objeto_executor": "Construção de Quadra Coberta na Escola Rural Poço Claro."
+ },
+ {
+  "id_executor": 10807,
+  "id_plano_acao": 19862,
+  "cnpj_executor": "83102749000177",
+  "nome_executor": "MUNICIPIO DE CAMPO ALEGRE",
+  "objeto_executor": "Pavimentação Asfáltica na Rodovia Municipal RM 020 - zona rural"
+ },
+ {
+  "id_executor": 11423,
+  "id_plano_acao": 68006,
+  "cnpj_executor": "82892365000132",
+  "nome_executor": "MUNICIPIO DE PAULO LOPES",
+  "objeto_executor": "PAVIMENTAÇÃO ASFALTICA DA RUA JUVENCIO RODRIGUES."
+ },
+ {
+  "id_executor": 12459,
+  "id_plano_acao": 16136,
+  "cnpj_executor": "82821208000136",
+  "nome_executor": "MUNICIPIO DE ITAPIRANGA",
+  "objeto_executor": "Aquisição de Escavadeira Hidráulica."
+ },
+ {
+  "id_executor": 12831,
+  "id_plano_acao": 74711,
+  "cnpj_executor": "95952230000167",
+  "nome_executor": "MUNICIPIO DE BRACO DO TROMBUDO",
+  "objeto_executor": "REFORMA E AMPLIAÇÃO CEI EDSON"
+ },
+ {
+  "id_executor": 13554,
+  "id_plano_acao": 74733,
+  "cnpj_executor": "95996187000131",
+  "nome_executor": "MUNICIPIO DE VARGEM BONITA",
+  "objeto_executor": "Aquisição de plantadeira de 13 linhas para fornecer auxílio aos pequenos agricultores nos períodos de plantio dos grãos, junto ao Município de Vargem Bonita/SC"
+ },
+ {
+  "id_executor": 14483,
+  "id_plano_acao": 70543,
+  "cnpj_executor": "01612836000100",
+  "nome_executor": "MUNICIPIO DE PRINCESA",
+  "objeto_executor": "Pavimentação asfáltica em ruas e avenidas do perímetro urbano"
+ },
+ {
+  "id_executor": 14493,
+  "id_plano_acao": 75299,
+  "cnpj_executor": "83169623000110",
+  "nome_executor": "MUNICIPIO DE JOINVILLE",
+  "objeto_executor": "Construção de Espaço de Lazer"
+ },
+ {
+  "id_executor": 14504,
+  "id_plano_acao": 75295,
+  "cnpj_executor": "95780441000160",
+  "nome_executor": "MUNICIPIO DE CAPIVARI DE BAIXO",
+  "objeto_executor": "Execução de Obras de Infraestrutura no município de Capivari de Baixo/SC."
+ },
+ {
+  "id_executor": 14950,
+  "id_plano_acao": 74716,
+  "cnpj_executor": "83102434000120",
+  "nome_executor": "MUNICIPIO DE PRESIDENTE GETULIO",
+  "objeto_executor": "Construção de Casa Mortuária"
+ },
+ {
+  "id_executor": 15006,
+  "id_plano_acao": 75300,
+  "cnpj_executor": "83102285000107",
+  "nome_executor": "MUNICIPIO DE BALNEARIO CAMBORIU",
+  "objeto_executor": "aquisição de computadores para unidades de educação básica, visando contribuir para o processo de ensino de aprendizagem e proporcionar uma melhor infraestrutura para a educação."
+ },
+ {
+  "id_executor": 15104,
+  "id_plano_acao": 68028,
+  "cnpj_executor": "82892290000190",
+  "nome_executor": "MUNICIPIO DE ANTONIO CARLOS",
+  "objeto_executor": "MANUTENÇÃO DE VIAS PÚBLICAS NO PERÍMETRO URBANO DO MUNICÍPIO DE ANTÔNIO CARLOS/SC"
+ },
+ {
+  "id_executor": 15844,
+  "id_plano_acao": 10414,
+  "cnpj_executor": "01612812000150",
+  "nome_executor": "MUNICIPIO DE SAO BERNARDINO",
+  "objeto_executor": "Aquisição de um imóvel por DESAPROPRIAÇÃO AMIGÁVEL sendo o imóvel, Chácara nº12 com área de 43.219,59 m2 (Mat. 1.559 CRI Campo Erê/SC) no valor de R$ 500.000,00 com auxilio da Emenda de Transferência Especial n202128550001-PROGRAMA Nº09032021 Plano de Ação n09032021-010414 no valor de R$ 150.000,00 oriunda do Dep Federal Pedro Uczai/SC,  e com R$ 50.000,00 de recursos de contrapartida do Municí-pio, para implantação de um Conjunto Habitacional e demais ações e programas sociais."
+ },
+ {
+  "id_executor": 16948,
+  "id_plano_acao": 3242,
+  "cnpj_executor": "85361863000147",
+  "nome_executor": "MUNICIPIO DE PALMITOS",
+  "objeto_executor": "Pavimentação asfáltica sobre calçamento existente, drenagem pluvial e sinalização, na Rua José Alécio, Bairro Resener,município de Palmitos/SC, com uma área total de 6.573,65M²"
+ },
+ {
+  "id_executor": 17484,
+  "id_plano_acao": 10413,
+  "cnpj_executor": "01612847000190",
+  "nome_executor": "MUNICIPIO DE SANTA TEREZINHA DO PROGRESSO",
+  "objeto_executor": "Contratação sob o regime de empreitada por preço global, para execução da pavimentação em trecho da Estrada Geral, localizada na Linha Campo Grande, interior do Município de Santa Terezinha do Progresso.  PAGAMENTO CONFORME BOLETIM DE MEDIÇÃO 02."
+ },
+ {
+  "id_executor": 17509,
+  "id_plano_acao": 42547,
+  "cnpj_executor": "83102517000119",
+  "nome_executor": "MUNICIPIO DE ITAIOPOLIS",
+  "objeto_executor": "Repasse de recursos para a Associação de Serviços Voluntários de Itaiópolis - Bombeiros Voluntários para a aquisição de um veículo (ambulância) totalmente equipada, para prestar os serviços de resgate e salvamento, de acordo com a necessidade dos cidadãos."
+ },
+ {
+  "id_executor": 17556,
+  "id_plano_acao": 3792,
+  "cnpj_executor": "82916818000113",
+  "nome_executor": "MUNICIPIO DE CRICIUMA",
+  "objeto_executor": "Investimento em Infraestrutura no munícipio de Criciúma, sendo:- 1ª etapa da Construção e Reforma da Praça do Congresso;- Construção do Prédio da Sede do Centro Esportivo do Bairro Santa Luzia- Execução de obras complementares no Mirante do Morro Cechinel;- Obras de reforma na Praça Nossa Senhora da Salete no Bairro Próspera;- Obras de acessibilidade nos bairros: Rio Maina, São Defende e Quarta Linha;- Obras de melhoria de drenagem urbana nos bairros: Centro e Santa Catarina no município de Criciúma/SC.- Aquisição sob demanda de materiais agregados para uso na Usina de Asfalto e realização de pavimentação, repavimentação, drenagens, revestimento, manutenção e conservação de diversos logradouros públicos."
+ },
+ {
+  "id_executor": 18156,
+  "id_plano_acao": 3843,
+  "cnpj_executor": "82916826000160",
+  "nome_executor": "MUNICIPIO DE NOVA VENEZA",
+  "objeto_executor": "Revitalização da Iluminação PúblicaRecuperação de Revestimento Primário das Rodovias"
+ },
+ {
+  "id_executor": 18519,
+  "id_plano_acao": 35157,
+  "cnpj_executor": "83026773000174",
+  "nome_executor": "MUNICIPIO DE DIONISIO CERQUEIRA",
+  "objeto_executor": "ADMIN. GERAL DOS BENS E SERVIÇOS DE ABASTECIMENTO DE ÁGUA NO INTERIOR"
+ },
+ {
+  "id_executor": 19027,
+  "id_plano_acao": 3350,
+  "cnpj_executor": "75461970000193",
+  "nome_executor": "MUNICIPIO DE PORTO RICO",
+  "objeto_executor": "Recape Asfáltico das Ruas: Avenida João Carraro, Rua Antônio Corsetti, e Rua Rio Madeira"
+ },
+ {
+  "id_executor": 20332,
+  "id_plano_acao": 70554,
+  "cnpj_executor": "83024240000153",
+  "nome_executor": "MUNICIPIO DE ITA",
+  "objeto_executor": "Pavimentação de vias publicas acesso a comunidade de Rio Branco- Interior do município de Itá-SC."
+ },
+ {
+  "id_executor": 20757,
+  "id_plano_acao": 4309,
+  "cnpj_executor": "82821182000126",
+  "nome_executor": "MUNICIPIO DE ROMELANDIA",
+  "objeto_executor": "AÇÕES DE CUSTEIO DE MANUTENÇÃO DAS ATIVIDADES DE ABERTURA E CONSERVAÇÃO DE ESTRADAS VICINAIS E DE ASSISTENCIA AOS AGRICULTORES MEDIANTE CONTRATAÇÃO DE HORAS MÁQUINA, MANUTENÇÃO E CONSERVAÇÃO DE VEÍCULOS, AQUISIÇÃO DE TUBOS E GALERIAS, MATERIAL DE EXPEDIENTE, COMBUSTÍVEIS E LUBRIFICANTES AUTOMOTICOS."
+ },
+ {
+  "id_executor": 20932,
+  "id_plano_acao": 37042,
+  "cnpj_executor": "82939430000138",
+  "nome_executor": "MUNICIPIO DE HERVAL D'OESTE",
+  "objeto_executor": "Contratação de Empresa Especializada para Pavimentação do Distrito Industrial II - localizado na Marginal da BR-282, representando 2.426,00 m², contemplando os serviços de Pavimentação em C.B.U.Q, Meio-Fio, Drenagem Pluvial e Sinalização Viária Vertical e Horizontal, incluindo o fornecimento de Material e Mão de Obra."
+ },
+ {
+  "id_executor": 21126,
+  "id_plano_acao": 31253,
+  "cnpj_executor": "82548983000160",
+  "nome_executor": "MUNICIPIO DE TURVO",
+  "objeto_executor": "152 - Aquisição De Veículo"
+ },
+ {
+  "id_executor": 21247,
+  "id_plano_acao": 10971,
+  "cnpj_executor": "83026138000197",
+  "nome_executor": "MUNICIPIO DE DESCANSO",
+  "objeto_executor": "Execução de obras de pavimentação com pedras irregulares nas Ruas Sete de Setembro-192,50m², 16 de Dezembro-520m², Antônio Ciechanowski-630m², Antônio Ziliotto-500m², nas Ruas João Gomercindo Agostini, General Juarez Távora, Pedro Lorenski, Érico Verissimo, e João Lemos com área total a pavimentar de 4.749,24m², perímetro urbano, e pavimentação asfáltica da Rua Professora Bernardina Ghizzi, Distrito de Itajubá, perímetro urbano, com área total a pavimentar de 2.017,83m², no Município de Descanso."
+ },
+ {
+  "id_executor": 21250,
+  "id_plano_acao": 16110,
+  "cnpj_executor": "83102608000154",
+  "nome_executor": "MUNICIPIO DE ALFREDO WAGNER",
+  "objeto_executor": "Pavimentação asfáltica da Rua Padre Cristóvão Arnald"
+ },
+ {
+  "id_executor": 21594,
+  "id_plano_acao": 35165,
+  "cnpj_executor": "83102426000183",
+  "nome_executor": "MUNICIPIO DE DONA EMMA",
+  "objeto_executor": "Aquisição de equipamentos rodoviários"
+ },
+ {
+  "id_executor": 21634,
+  "id_plano_acao": 12115,
+  "cnpj_executor": "83102426000183",
+  "nome_executor": "MUNICIPIO DE DONA EMMA",
+  "objeto_executor": "Pavimentação de via"
+ },
+ {
+  "id_executor": 21665,
+  "id_plano_acao": 35159,
+  "cnpj_executor": "95951323000177",
+  "nome_executor": "MUNICIPIO DE SANTA TEREZINHA",
+  "objeto_executor": "4.4.90.51.98.00.00.00 - INFRAESTRUTURA URBANA  - RECUPERAÇÃO DOS PASSEIOS ."
+ },
+ {
+  "id_executor": 28250,
+  "id_plano_acao": 74443,
+  "cnpj_executor": "51739754000107",
+  "nome_executor": "SECRETARIA EXECUTIVA DA AQUICULTURA E PESCA",
+  "objeto_executor": "999 - Objeto Único Não Padronizado – Demais - UO 58000 MPesca- Ação 20Y0 - Desenvolvimento da Aquicultura."
+ },
+ {
+  "id_executor": 28635,
+  "id_plano_acao": 35179,
+  "cnpj_executor": "82925652000100",
+  "nome_executor": "MUNICIPIO DE SAO JOAO BATISTA",
+  "objeto_executor": "Pavimentação e drenagem de diversas ruas no município de São João Batista/SC"
+ },
+ {
+  "id_executor": 30810,
+  "id_plano_acao": 10412,
+  "cnpj_executor": "01612844000156",
+  "nome_executor": "MUNICIPIO DE SALTINHO",
+  "objeto_executor": "AQUISIÇÃO DE ESCAVADEIRA HIDRÁULICA E DE CAMINHÃO CAÇAMBA PARA A SECRETARIA DE AGRICULTURA"
+ },
+ {
+  "id_executor": 31194,
+  "id_plano_acao": 3560,
+  "cnpj_executor": "01612116000144",
+  "nome_executor": "MUNICIPIO DE CUNHATAI",
+  "objeto_executor": "REFORMA DE GINÁSIO DE ESPORTES DA LINHA CAMBARÁ DO MUNICÍPIO DE CUNHATAÍ"
+ },
+ {
+  "id_executor": 31271,
+  "id_plano_acao": 4490,
+  "cnpj_executor": "82547274000160",
+  "nome_executor": "MUNICIPIO DE SAO JOAO DO SUL",
+  "objeto_executor": "Custeio da Secretaria de Educação"
+ },
+ {
+  "id_executor": 31687,
+  "id_plano_acao": 4684,
+  "cnpj_executor": "95952230000167",
+  "nome_executor": "MUNICIPIO DE BRACO DO TROMBUDO",
+  "objeto_executor": "AQUISIÇÃO DE DIESEL S500 E DIESEL S10 PARA ABASTECER A BOMBA DE COMBUSTÍVEL DA SECRETARIA DE OBRAS DA PREFEITURA MUNICIPAL DE BRAÇO DO TROMBUDO."
+ },
+ {
+  "id_executor": 34887,
+  "id_plano_acao": 3847,
+  "cnpj_executor": "76950039000131",
+  "nome_executor": "MUNICIPIO DE ENGENHEIRO BELTRAO",
+  "objeto_executor": "REFORMA DO TERMINAL RODOVIÁRIO"
+ },
+ {
+  "id_executor": 37042,
+  "id_plano_acao": 83405,
+  "cnpj_executor": "78497492000160",
+  "nome_executor": "MUNICIPIO DE TIMBO GRANDE",
+  "objeto_executor": "ROLO COMPACTADOR NOVO. ZERO HORA. PESO OPERACIONAL12.200 KG. AR-CONDICIONADO; MAQUINA PARA MANUTENÇÃO DE ESTRADAS DA ZONA RURAL 01 Rolo Compactador, cabine fechada, liso, acompanha kit de revestimentotipo “pé de carneiro\"Potência bruta máxima igual a 162 [HP]Com os equipamentos obrigatórios exigidos pelo CONTRAN"
+ },
+ {
+  "id_executor": 37126,
+  "id_plano_acao": 81795,
+  "cnpj_executor": "01605479000152",
+  "nome_executor": "MUNICIPIO DE BALNEARIO ARROIO DO SILVA",
+  "objeto_executor": "Pavimentação Asfáltica de Trecho da Av. Beira-Mar"
+ },
+ {
+  "id_executor": 38596,
+  "id_plano_acao": 83237,
+  "cnpj_executor": "83009902000116",
+  "nome_executor": "MUNICIPIO DE GALVAO",
+  "objeto_executor": "O objeto deste plano de trabalho é a aquisição de dois veículos tipo pick-up strada(uma cabine dupla e uma cabine simples) para atender às demandas do CRAS – Centro de Referência de Assistência Social do Município. A meta é disponibilizar transporte adequado para o fortalecimento das atividades da equipe técnica do CRAS, ampliando o acesso da população em situação de vulnerabilidade social aos serviços da rede SUAS e garantindo a execução eficiente das ações previstas no plano de trabalho.                      A unidade beneficiada é o CRAS municipal, equipamento público referenciado da Rede SUAS, responsável pela execução de serviços de proteção social básica, atendimento a famílias e indivíduos em situação de vulnerabilidade social, bem como ações de prevenção e fortalecimento de vínculos.                     Os veículos são classificados como bens permanentes, enquadrando-se no GND 4 – Investimento, conforme rol previsto na Portaria SNAS/MDS nº 47, de 25 de abril de 2025.                     O veículo cabine dupla será utilizado para transporte de equipe técnica do CRAS em visitas domiciliares, acompanhamento familiar e atendimento em áreas rurais ou de difícil acesso.                     O veículo cabine simples será destinado ao transporte de materiais e insumos necessários às atividades socioassistenciais, bem como suporte logístico e emergencial para ações do CRAS.                     Os valores foram definidos com base a licitação através do consorcio SIMCATARINA, considerando o preço médio de veículos novos do modelo pick-up Strada, compatíveis com as necessidades operacionais do CRAS. Caso os valores de mercado superem o recurso disponibilizado, o município se compromete a complementar o valor com recursos próprios ou adquirir o modelo compatível dentro do montante liberado.                     A unidade beneficiada é pública, vinculada diretamente à Secretaria Municipal de Assistência Social, sendo um equipamento referenciado da Rede SUAS, portanto, atende aos critérios de elegibilidade para aplicação de recursos de Transferência Especial.                     A aquisição dos veículos permitirá: -  Transporte seguro e eficiente da equipe técnica do CRAS para visitas domiciliares e atividades externas;-  Deslocamento de insumos e materiais necessários às ações socioassistenciais;- Ampliação da cobertura do serviço, especialmente em áreas rurais ou de difícil acesso;- Maior rapidez no atendimento emergencial a famílias em situação de vulnerabilidade; - Otimização da execução das metas previstas no plano de trabalho e fortalecimento da rede SUAS no município.                    Todos os procedimentos de aquisição seguirão as normas legais e administrativas vigentes, garantindo transparência e eficiência na utilização dos recursos públicos. A vinculação dos veículos ao CRAS atende integralmente às finalidades do SUAS e às ações previstas pelo MDS, cumprindo os requisitos da Portaria SNAS/MDS nº 47/2025."
+ },
+ {
+  "id_executor": 38629,
+  "id_plano_acao": 82366,
+  "cnpj_executor": "78510112000180",
+  "nome_executor": "MUNICIPIO DE LINDOIA DO SUL",
+  "objeto_executor": "Aquisição de equipamentos e implementos agrícolas para apoio a produção agropecuária de aproximadamente 150 famílias da agricultura familiar do  Município de Lindóia do Sul."
+ },
+ {
+  "id_executor": 40441,
+  "id_plano_acao": 81809,
+  "cnpj_executor": "82826462000127",
+  "nome_executor": "MUNICIPIO DE ARROIO TRINTA",
+  "objeto_executor": "Pavimentação/Recapeamento de vias no Perímetro Urbano do Município de Arroio Trinta/SC"
+ },
+ {
+  "id_executor": 40562,
+  "id_plano_acao": 81793,
+  "cnpj_executor": "82915232000134",
+  "nome_executor": "MUNICIPIO DE TIMBE DO SUL",
+  "objeto_executor": "Pavimentação Asfáltica de Trecho de Estrada Vicinal na Área Rural; TBS 126 que liga Nova Vicença à Amola Faca em uma extensão de 1.460,00 m2"
+ },
+ {
+  "id_executor": 43145,
+  "id_plano_acao": 85005,
+  "cnpj_executor": "82892365000132",
+  "nome_executor": "MUNICIPIO DE PAULO LOPES",
+  "objeto_executor": "Pavimentação asfáltica da Rua Renato Borges, situada na área urbana do bairro do bairro Penha"
+ },
+ {
+  "id_executor": 44571,
+  "id_plano_acao": 81785,
+  "cnpj_executor": "82926585000130",
+  "nome_executor": "MUNICIPIO DE RIO FORTUNA",
+  "objeto_executor": "Pavimentação Asfáltica de trecho da Estrada Geral Rio Bravo Baixo, na Área Rural do Município de Rio Fortuna"
+ },
+ {
+  "id_executor": 44919,
+  "id_plano_acao": 83219,
+  "cnpj_executor": "83102327000100",
+  "nome_executor": "MUNICIPIO DE PENHA",
+  "objeto_executor": "Drenagem e Pavimentação da Rua Alvim Rodrigues Severino - Trecho 1 etapa 2 - área urbana"
+ },
+ {
+  "id_executor": 45199,
+  "id_plano_acao": 83218,
+  "cnpj_executor": "82777301000190",
+  "nome_executor": "MUNICIPIO DE LAGES",
+  "objeto_executor": "Pavimentação da Rua Genuíno Machado de Melo, bairro Penha"
+ },
+ {
+  "id_executor": 46475,
+  "id_plano_acao": 81307,
+  "cnpj_executor": "82939380000199",
+  "nome_executor": "MUNICIPIO DE JOACABA",
+  "objeto_executor": "Cobertura de quadra esportiva em área total construída aproximada de 777,51m², localizada na Rua Luiz Baldissera, s/n, Bairro Jardim das Hortências, área urbana do Município de Joaçaba/SC"
+ },
+ {
+  "id_executor": 46918,
+  "id_plano_acao": 83286,
+  "cnpj_executor": "82909409000190",
+  "nome_executor": "MUNICIPIO DE IMBITUBA",
+  "objeto_executor": "PAVIMENTAÇÃO ASFÁLTICA URBANA DE TRECHO DA RUA PEDRO BITTENCOURT, VILA NOVA, IMBITUBA/SC"
+ },
+ {
+  "id_executor": 48252,
+  "id_plano_acao": 88542,
+  "cnpj_executor": "82562893000123",
+  "nome_executor": "MUNICIPIO DE CANELINHA",
+  "objeto_executor": "Execução de pavimentação asfáltica em áreas urbanas do Munciipio de Canelinha., visando  melhorar as condições de trafegabilidade, garantir segurança aos usuários e promover o desenvolvimento urbano e econômico da regiãoPavimentação as fáltica da Rua Orlando dos Santos, Bairro Papagaios área urbana consolidadaPavimentação asgfáltica da Rua Manoel Amorim, Bairro índia do Municipio - área urbana consolidadaPavimentação asfáltica da Rua Ramiro Gonçalo Cardoso - Bairro Galera do Municipio - área urbana consolidada"
+ },
+ {
+  "id_executor": 50279,
+  "id_plano_acao": 85715,
+  "cnpj_executor": "78492576000100",
+  "nome_executor": "MUNICIPIO DE URUPEMA",
+  "objeto_executor": "AQUISIÇÃO / APLICAÇÃO DE PEDRA BICA CORRIDA (PARCIAL ESTRADAS RURAIS VICINAIS LOCALIDADES DO CEDRO E BOSSOROCA)  E/OU CONCRETO USINADO ( ACESSO AO PARQUE DE EXPOSICAO/ SINDICATO RURAL/ HORTO MUNICIPAL)."
+ },
+ {
+  "id_executor": 51089,
+  "id_plano_acao": 95937,
+  "cnpj_executor": "82562893000123",
+  "nome_executor": "MUNICIPIO DE CANELINHA",
+  "objeto_executor": "Pavimentação asfáltica da Rua Regina Burtz Clemer - aproximadamente 300m -  Localidade Urussanga no Bairro India - Área urbana consolidada"
+ },
+ {
+  "id_executor": 53714,
+  "id_plano_acao": 98055,
+  "cnpj_executor": "83102277000152",
+  "nome_executor": "MUNICIPIO DE ITAJAI",
+  "objeto_executor": "O objeto consiste na execução de obra de pavimentação da Rua Eduardo Vicente de Mello, localizada no Município de Itajaí/SC, integrante da malha viária em área em processo de consolidação urbana, atendendo diretamente a população residente e contribuindo para a mobilidade local.Atualmente, a via apresenta trechos sem pavimentação ou em condições precárias de conservação, comprometendo a trafegabilidade de veículos e pedestres, especialmente em períodos chuvosos, quando ocorrem formação de lama, processos erosivos e acúmulo de águas pluviais. Em períodos de estiagem, verifica-se elevada emissão de poeira, ocasionando impactos negativos à saúde e à qualidade de vida da população.As condições atuais da via também dificultam o acesso a serviços públicos essenciais, tais como coleta de resíduos sólidos, atendimento de urgência e emergência e demais serviços urbanos, além de aumentarem o risco de acidentes em função das irregularidades do leito carroçável.Diante desse cenário, a intervenção proposta compreende a pavimentação da via, associada à implantação de sistema de drenagem pluvial adequado, com vistas a assegurar melhores condições de mobilidade, segurança viária e acessibilidade, promovendo a melhoria da infraestrutura urbana e contribuindo para o desenvolvimento ordenado da região."
+ },
+ {
+  "id_executor": 53967,
+  "id_plano_acao": 97323,
+  "cnpj_executor": "83102780000108",
+  "nome_executor": "MUNICIPIO DE BENEDITO NOVO",
+  "objeto_executor": "A proposta refere-se à execução de obras de pavimentação e melhoria da infraestrutura viária da Pavimentação em Via Urbana da Rua Mathias Koimann, no município de Benedito Novo/SC, com o objetivo de aprimorar as condições de circulação e segurança no local.Atualmente, a via apresenta limitações estruturais, como presença de poeira em períodos secos e acúmulo de lama em dias chuvosos, dificultando o deslocamento de moradores e o acesso de serviços essenciais. A intervenção visa proporcionar melhores condições de mobilidade, conforto e segurança para a população.Os serviços previstos incluem preparação da via, pavimentação, execução de meio-fio, sinalização e adequações necessárias.A execução da obra atende a uma demanda da comunidade, contribuindo para o desenvolvimento urbano e a melhoria da qualidade de vida local."
+ },
+ {
+  "id_executor": 54458,
+  "id_plano_acao": 98057,
+  "cnpj_executor": "82892274000105",
+  "nome_executor": "MUNICIPIO DE SAO JOSE",
+  "objeto_executor": "Pavimentação Urbana no municipio de São José"
+ },
+ {
+  "id_executor": 54901,
+  "id_plano_acao": 94091,
+  "cnpj_executor": "83102517000119",
+  "nome_executor": "MUNICIPIO DE ITAIOPOLIS",
+  "objeto_executor": "Aquisição de 1 (um) Conjunto móvel de britagem novo instalado sobre um reboque metálico duplo, construído sobre um chassi com viga “u’ reforçada de no mínimo 300mmx74mm, comprimento mínimo de 6000mm, montado sobre dois eixos, sendo com um eixo traseiro rígido com rodado e pneus duplos, e um eixo dianteiro com rodados e pneus simples, com cambão para rebocar, pneus 275, no mínimo duas vigas estabilizadoras fixadas ao chassi. Para produção de material pétreo, destinado à recuperação e manutenção de estradas vicinais do Município de Itaiópolis-SC, visando melhorar o escoamento da produção agrícola e as condições de tráfego de toda a população."
+ },
+ {
+  "id_executor": 55648,
+  "id_plano_acao": 97350,
+  "cnpj_executor": "82827999000101",
+  "nome_executor": "MUNICIPIO DE TANGARA",
+  "objeto_executor": "Pavimentação em diversas ruas do município de Tangará /SC a fim de melhorar a mobilidade urbana."
+ },
+ {
+  "id_executor": 56509,
+  "id_plano_acao": 97338,
+  "cnpj_executor": "01566621000108",
+  "nome_executor": "MUNICIPIO DE FLOR DO SERTAO",
+  "objeto_executor": "Implantação de cobertura em trecho da Avenida Flor do Sertão, localizada na região central do município de Flor do Sertão, em área estratégica próxima ao Centro Esportivo, ao Centro Educacional Padre Luiz Muhl, à praça central e à Igreja Católica, caracterizada como eixo estruturante de circulação urbana e concentração de eventos públicos. (Latitude  26°46'41.84\"S, Longitude  53°20'47.52\"O)A intervenção compreende a execução de estrutura de cobertura sobre a via pública contemplando passeio e via de circulação de veículos, à readequação da rede elétrica alteração para rede subterrânea de energia e encaminhamento das águas pluviais, garantindo condições adequadas de segurança, funcionalidade e uso contínuo do espaço, independentemente das condições climáticas.O projeto será elaborado e executado em conformidade com as normas técnicas vigentes, contemplando requisitos de segurança estrutural, acessibilidade universal, mobilidade urbana e integração urbanística, assegurando durabilidade, desempenho e adequada inserção no contexto urbano consolidado.PLANEJAMENTO DE EXECUÇÃOA execução será estruturada em fases técnicas sequenciais e integradas, compreendendo: (I)\tElaboração dos projetos executivos e complementares; (II)\tAprovação junto aos órgãos competentes; (III)\tMobilização de canteiro e intervenções preliminares; (IV)\tImplantação da rede elétrica subterrânea; (V)\tMontagem da estrutura de cobertura, captação e encaminhamento das águas pluviais; e (VI)\tExecução dos serviços de acabamento, sinalização e liberação para uso. O cronograma físico-financeiro será planejado de forma a mitigar interferências na dinâmica urbana e assegurar a compatibilidade com o calendário de eventos locais.Para o momento a área a ser contemplada com a estrutura proposta é de aproximadamente 400,00m², com as devidas intervenções e sequência anteriormente determinada. Salienta-se que o município ainda não possui projeto elaborado, sendo que não é possível para o momento elaborar metas detalhadas (conforme solicitado), haja vista a impossibilidade de definir os valores necessários em cada uma delas sem as devidas mensurações de quantitativos.JUSTIFICATIVA TÉCNICA E RELAÇÃO COM O TURISMOA implantação da rua coberta configura-se como infraestrutura essencial de suporte ao turismo local, especialmente considerando a vocação do município para o turismo religioso, cultural e rural. O município de Flor do Sertão realiza tradicionalmente as festividades em honra à Nossa Senhora de Caravaggio, evento consolidado no cenário regional, responsável por significativo fluxo de visitantes.Juntamente com a festa da padroeira, é realizada uma tradicional cavalgada oriunda do município de Santa Terezinha do Progresso até Flor do Sertão, onde inicia no dia anterior ao dia da festa, chegando na cidade trazendo a imagem da santa padroeira, configurando importante manifestação cultural e religiosa, cuja recepção e apoio logístico demandam infraestrutura adequada para acolhimento dos participantes e visitantes.Adicionalmente, o município apresenta potencial turístico associado a atrativos naturais, como cachoeiras e áreas de lazer, além de ofertas de pernoites em chalés, que atendem visitantes e turistas que buscam tranquilidade e contato com a natureza, bem como, um pesqueiro de destaque regional, que atrai público de diversos municípios vizinhos e fortalece o turismo rural.Nesse contexto, a ausência de estrutura coberta limita a realização e continuidade de eventos em períodos de condições climáticas adversas, reduzindo o potencial de aproveitamento turístico e econômico. A implantação da cobertura viária, permitirá a utilização contínua do espaço público para realização de eventos religiosos, feiras, exposições, atividades culturais e gastronômicas, funcionando como equipamento urbano de apoio ao turismo, ampliando a capacidade de recepção de visitantes e promovendo maior permanência no município.Dessa forma, o investimento proposto atende diretamente à necessidade de qualificação da infraestrutura urbana voltada ao turismo, contribuindo para o fortalecimento das atividades econômicas locais, valorização cultural e desenvolvimento sustentável, em consonância com as diretrizes de fomento ao turismo regional e melhoria da qualidade dos espaços públicos.Obs.: Ainda não existe e-mail específico destinado à área de turismo no âmbito da administração municipal."
+ },
+ {
+  "id_executor": 56750,
+  "id_plano_acao": 98059,
+  "cnpj_executor": "82892308000153",
+  "nome_executor": "MUNICIPIO DE BIGUACU",
+  "objeto_executor": "Pavimentação Asfaltica das Ruas Manoel Francisco Machado, Maria amandia de Simas e Manoel Justino de Simas no Bairro Fundos."
+ },
+ {
+  "id_executor": 58288,
+  "id_plano_acao": 95956,
+  "cnpj_executor": "82916800000111",
+  "nome_executor": "MUNICIPIO DE ICARA",
+  "objeto_executor": "A Pavimentação da estrada Adair De Bona, Trecho I, São Rafael, Içara/SC, tem como objetivo principal garantir o escoamento eficiente da produção local, promovendo segurança, agilidade e fluidez no tráfego. A iniciativa contribui diretamente para o desenvolvimento econômico da região, ao facilitar o acesso a mercados e reduzir os custos logísticos. Além disso, a obra proporciona melhorias significativas na qualidade de vida da população, assegurando melhor acesso a serviços públicos, como saúde, educação e infraestrutura, e reduzindo os gastos com manutenção de veículos decorrentes das más condições das vias não pavimentadas"
+ },
+ {
+  "id_executor": 58781,
+  "id_plano_acao": 97263,
+  "cnpj_executor": "83102566000151",
+  "nome_executor": "MUNICIPIO DE MATOS COSTA",
+  "objeto_executor": "Pavimentação e qualificação viária."
+ },
+ {
+  "id_executor": 59241,
+  "id_plano_acao": 97237,
+  "cnpj_executor": "82939430000138",
+  "nome_executor": "MUNICIPIO DE HERVAL D'OESTE",
+  "objeto_executor": "Pavimentação em Concreto das Estradas vicinais junto as Comunidades Capoeirada, Barreiros e Itororó, área rural no município de Herval D'Oeste/SC"
+ },
+ {
+  "id_executor": 61081,
+  "id_plano_acao": 99315,
+  "cnpj_executor": "83026138000197",
+  "nome_executor": "MUNICIPIO DE DESCANSO",
+  "objeto_executor": "OBRAS DE PAVIMENTAÇÃO ASFÁLTICA DE RUAS DO PERÍMETRO URBANO DA CIDADE DE DESCANSO (TRECHOS: Rua Vereador Nerci Zino Grassiolli; Rua Félix Piaseski; Rua Santo Estanislau; Rua Félix Jaroseski"
+ },
+ {
+  "id_executor": 61134,
+  "id_plano_acao": 99036,
+  "cnpj_executor": "83021824000175",
+  "nome_executor": "MUNICIPIO DE CORONEL FREITAS",
+  "objeto_executor": "Aquisição de 01 (um) caminhão novo, zero quilômetro, equipado com caçamba basculante com capacidade de 12 m³, transmissão manual e tração 6x4, destinado à Secretaria Municipal de Agricultura de Coronel Freitas/SC.O veículo será utilizado no atendimento das demandas da Secretaria Municipal de Agricultura, especialmente na área rural do Município, com a finalidade de fortalecer e fomentar o setor agropecuário, proporcionando melhores condições para a execução dos serviços municipais de apoio às atividades agrícolas e pecuárias.A aquisição beneficiará pequenos, médios e grandes produtores rurais do Município, contribuindo para a melhoria da infraestrutura rural, o fortalecimento das atividades produtivas e o desenvolvimento econômico do setor agropecuário local."
+ }
+]

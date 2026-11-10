@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     llm_model: str = "rastro-sql"
     llm_api_key: str | None = None
     llm_extra_body: dict[str, Any] = {"reasoning_effort": "none"}
+    transferegov_base_url: str = "https://api-publica.transferegov.gestao.gov.br/especiais"
 
     def _dsn(self, user: str, password: str) -> str:
         return (

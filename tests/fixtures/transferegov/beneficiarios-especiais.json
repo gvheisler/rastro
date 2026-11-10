@@ -1,0 +1,410 @@
+[
+ {
+  "id_beneficiario": 2642,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE CUNHATAI",
+  "cnpj_beneficiario": "01612116000144"
+ },
+ {
+  "id_beneficiario": 2808,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE SALTINHO",
+  "cnpj_beneficiario": "01612844000156"
+ },
+ {
+  "id_beneficiario": 2809,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE SANTA TEREZINHA DO PROGRESSO",
+  "cnpj_beneficiario": "01612847000190"
+ },
+ {
+  "id_beneficiario": 2810,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE SAO BERNARDINO",
+  "cnpj_beneficiario": "01612812000150"
+ },
+ {
+  "id_beneficiario": 2811,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE SAO PEDRO DE ALCANTARA",
+  "cnpj_beneficiario": "01613101000109"
+ },
+ {
+  "id_beneficiario": 2814,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE FORQUILHINHA",
+  "cnpj_beneficiario": "81531162000158"
+ },
+ {
+  "id_beneficiario": 3299,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE BRACO DO TROMBUDO",
+  "cnpj_beneficiario": "95952230000167"
+ },
+ {
+  "id_beneficiario": 3499,
+  "uf_beneficiario": "PR",
+  "nome_beneficiario": "MUNICIPIO DE ENGENHEIRO BELTRAO",
+  "cnpj_beneficiario": "76950039000131"
+ },
+ {
+  "id_beneficiario": 3549,
+  "uf_beneficiario": "PR",
+  "nome_beneficiario": "MUNICIPIO DE PORTO RICO",
+  "cnpj_beneficiario": "75461970000193"
+ },
+ {
+  "id_beneficiario": 3602,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ALFREDO WAGNER",
+  "cnpj_beneficiario": "83102608000154"
+ },
+ {
+  "id_beneficiario": 3603,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ANCHIETA",
+  "cnpj_beneficiario": "83024687000122"
+ },
+ {
+  "id_beneficiario": 3610,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE BENEDITO NOVO",
+  "cnpj_beneficiario": "83102780000108"
+ },
+ {
+  "id_beneficiario": 3611,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE BIGUACU",
+  "cnpj_beneficiario": "82892308000153"
+ },
+ {
+  "id_beneficiario": 3616,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE CAMPO ALEGRE",
+  "cnpj_beneficiario": "83102749000177"
+ },
+ {
+  "id_beneficiario": 3619,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE CANELINHA",
+  "cnpj_beneficiario": "82562893000123"
+ },
+ {
+  "id_beneficiario": 3621,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE CORONEL FREITAS",
+  "cnpj_beneficiario": "83021824000175"
+ },
+ {
+  "id_beneficiario": 3622,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE CRICIUMA",
+  "cnpj_beneficiario": "82916818000113"
+ },
+ {
+  "id_beneficiario": 3624,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE DIONISIO CERQUEIRA",
+  "cnpj_beneficiario": "83026773000174"
+ },
+ {
+  "id_beneficiario": 3625,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE DONA EMMA",
+  "cnpj_beneficiario": "83102426000183"
+ },
+ {
+  "id_beneficiario": 3626,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "ESTADO DE SANTA CATARINA",
+  "cnpj_beneficiario": "82951229000176"
+ },
+ {
+  "id_beneficiario": 3633,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE HERVAL D'OESTE",
+  "cnpj_beneficiario": "82939430000138"
+ },
+ {
+  "id_beneficiario": 3635,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE IBIRAMA",
+  "cnpj_beneficiario": "83102418000137"
+ },
+ {
+  "id_beneficiario": 3639,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ITAIOPOLIS",
+  "cnpj_beneficiario": "83102517000119"
+ },
+ {
+  "id_beneficiario": 3643,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE JARAGUA DO SUL",
+  "cnpj_beneficiario": "83102459000123"
+ },
+ {
+  "id_beneficiario": 3644,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE LAGES",
+  "cnpj_beneficiario": "82777301000190"
+ },
+ {
+  "id_beneficiario": 3652,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE NOVA VENEZA",
+  "cnpj_beneficiario": "82916826000160"
+ },
+ {
+  "id_beneficiario": 3653,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE PALMITOS",
+  "cnpj_beneficiario": "85361863000147"
+ },
+ {
+  "id_beneficiario": 3655,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE PAULO LOPES",
+  "cnpj_beneficiario": "82892365000132"
+ },
+ {
+  "id_beneficiario": 3657,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE PENHA",
+  "cnpj_beneficiario": "83102327000100"
+ },
+ {
+  "id_beneficiario": 3666,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE PRESIDENTE GETULIO",
+  "cnpj_beneficiario": "83102434000120"
+ },
+ {
+  "id_beneficiario": 3673,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE RIO DO SUL",
+  "cnpj_beneficiario": "83102574000106"
+ },
+ {
+  "id_beneficiario": 3674,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE RIO FORTUNA",
+  "cnpj_beneficiario": "82926585000130"
+ },
+ {
+  "id_beneficiario": 3675,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ROMELANDIA",
+  "cnpj_beneficiario": "82821182000126"
+ },
+ {
+  "id_beneficiario": 3680,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE SAO JOAO BATISTA",
+  "cnpj_beneficiario": "82925652000100"
+ },
+ {
+  "id_beneficiario": 3681,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE SAO JOAO DO SUL",
+  "cnpj_beneficiario": "82547274000160"
+ },
+ {
+  "id_beneficiario": 3692,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE TURVO",
+  "cnpj_beneficiario": "82548983000160"
+ },
+ {
+  "id_beneficiario": 3697,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE TIMBE DO SUL",
+  "cnpj_beneficiario": "82915232000134"
+ },
+ {
+  "id_beneficiario": 3698,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE CORREIA PINTO",
+  "cnpj_beneficiario": "75438655000145"
+ },
+ {
+  "id_beneficiario": 3881,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE IRACEMINHA",
+  "cnpj_beneficiario": "80623606000112"
+ },
+ {
+  "id_beneficiario": 3884,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE TIMBO GRANDE",
+  "cnpj_beneficiario": "78497492000160"
+ },
+ {
+  "id_beneficiario": 3886,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE URUPEMA",
+  "cnpj_beneficiario": "78492576000100"
+ },
+ {
+  "id_beneficiario": 5965,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE PRINCESA",
+  "cnpj_beneficiario": "01612836000100"
+ },
+ {
+  "id_beneficiario": 6194,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE BALNEARIO ARROIO DO SILVA",
+  "cnpj_beneficiario": "01605479000152"
+ },
+ {
+  "id_beneficiario": 6202,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE FLOR DO SERTAO",
+  "cnpj_beneficiario": "01566621000108"
+ },
+ {
+  "id_beneficiario": 7102,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE CAPIVARI DE BAIXO",
+  "cnpj_beneficiario": "95780441000160"
+ },
+ {
+  "id_beneficiario": 7104,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE SANTA TEREZINHA",
+  "cnpj_beneficiario": "95951323000177"
+ },
+ {
+  "id_beneficiario": 7514,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE DESCANSO",
+  "cnpj_beneficiario": "83026138000197"
+ },
+ {
+  "id_beneficiario": 7515,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE GALVAO",
+  "cnpj_beneficiario": "83009902000116"
+ },
+ {
+  "id_beneficiario": 7516,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE GAROPABA",
+  "cnpj_beneficiario": "82836057000190"
+ },
+ {
+  "id_beneficiario": 7520,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ICARA",
+  "cnpj_beneficiario": "82916800000111"
+ },
+ {
+  "id_beneficiario": 7523,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE IMBITUBA",
+  "cnpj_beneficiario": "82909409000190"
+ },
+ {
+  "id_beneficiario": 7526,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ITA",
+  "cnpj_beneficiario": "83024240000153"
+ },
+ {
+  "id_beneficiario": 7527,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ITAJAI",
+  "cnpj_beneficiario": "83102277000152"
+ },
+ {
+  "id_beneficiario": 7528,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ITAPIRANGA",
+  "cnpj_beneficiario": "82821208000136"
+ },
+ {
+  "id_beneficiario": 7530,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE LAGUNA",
+  "cnpj_beneficiario": "82928706000182"
+ },
+ {
+  "id_beneficiario": 7549,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE SAO JOSE",
+  "cnpj_beneficiario": "82892274000105"
+ },
+ {
+  "id_beneficiario": 7555,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE TANGARA",
+  "cnpj_beneficiario": "82827999000101"
+ },
+ {
+  "id_beneficiario": 7846,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE LINDOIA DO SUL",
+  "cnpj_beneficiario": "78510112000180"
+ },
+ {
+  "id_beneficiario": 7902,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE JOINVILLE",
+  "cnpj_beneficiario": "83169623000110"
+ },
+ {
+  "id_beneficiario": 8622,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE BALNEARIO RINCAO",
+  "cnpj_beneficiario": "17243084000197"
+ },
+ {
+  "id_beneficiario": 9081,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ARROIO TRINTA",
+  "cnpj_beneficiario": "82826462000127"
+ },
+ {
+  "id_beneficiario": 9084,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ANTONIO CARLOS",
+  "cnpj_beneficiario": "82892290000190"
+ },
+ {
+  "id_beneficiario": 9088,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE JOACABA",
+  "cnpj_beneficiario": "82939380000199"
+ },
+ {
+  "id_beneficiario": 9097,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE BALNEARIO CAMBORIU",
+  "cnpj_beneficiario": "83102285000107"
+ },
+ {
+  "id_beneficiario": 9100,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE ITUPORANGA",
+  "cnpj_beneficiario": "83102640000130"
+ },
+ {
+  "id_beneficiario": 9251,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE VARGEM BONITA",
+  "cnpj_beneficiario": "95996187000131"
+ },
+ {
+  "id_beneficiario": 9932,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "NAVEGANTES",
+  "cnpj_beneficiario": "83102855000150"
+ },
+ {
+  "id_beneficiario": 11039,
+  "uf_beneficiario": "SC",
+  "nome_beneficiario": "MUNICIPIO DE MATOS COSTA",
+  "cnpj_beneficiario": "83102566000151"
+ }
+]

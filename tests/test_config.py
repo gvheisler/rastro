@@ -48,3 +48,20 @@ def test_llm_can_point_to_another_server(monkeypatch):
     settings = Settings(_env_file=None)
     assert settings.llm_base_url == "http://localhost:8000/v1"
     assert settings.llm_extra_body == {"chat_template_kwargs": {"enable_thinking": False}}
+
+
+def test_transferegov_defaults_to_the_current_public_api(monkeypatch):
+    monkeypatch.setenv("POSTGRES_PASSWORD", "segredo")
+    monkeypatch.setenv("READONLY_PASSWORD", "leitura")
+    monkeypatch.delenv("TRANSFEREGOV_BASE_URL", raising=False)
+    settings = Settings(_env_file=None)
+    assert settings.transferegov_base_url == (
+        "https://api-publica.transferegov.gestao.gov.br/especiais"
+    )
+
+
+def test_transferegov_base_url_can_be_changed(monkeypatch):
+    monkeypatch.setenv("POSTGRES_PASSWORD", "segredo")
+    monkeypatch.setenv("READONLY_PASSWORD", "leitura")
+    monkeypatch.setenv("TRANSFEREGOV_BASE_URL", "http://localhost:9000/especiais")
+    assert Settings(_env_file=None).transferegov_base_url == "http://localhost:9000/especiais"

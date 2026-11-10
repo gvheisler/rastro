@@ -71,3 +71,65 @@ create table if not exists raw.cargas (
     linhas bigint not null,
     carregado_em timestamptz not null default now()
 );
+
+alter table raw.cargas add column if not exists atualizado_na_fonte date;
+
+create table if not exists raw.transferegov_beneficiarios (
+    id_beneficiario text,
+    uf_beneficiario text,
+    nome_beneficiario text,
+    cnpj_beneficiario text,
+    linha_carga bigint generated always as identity
+);
+
+create table if not exists raw.transferegov_planos_acao (
+    id_plano_acao text,
+    codigo_plano_acao text,
+    ano_plano_acao text,
+    situacao_plano_acao text,
+    data_aceite_plano_acao text,
+    motivo_impedimento_plano_acao text,
+    nome_parlamentar_emenda_plano_acao text,
+    ano_emenda_parlamentar_plano_acao text,
+    numero_emenda_parlamentar_plano_acao text,
+    valor_custeio_plano_acao text,
+    valor_investimento_plano_acao text,
+    categoria_despesa_plano_acao text,
+    codigo_descricao_areas_politicas_publicas_plano_acao text,
+    nome_objeto text,
+    detalhamento_objeto text,
+    id_beneficiario text,
+    linha_carga bigint generated always as identity
+);
+
+create table if not exists raw.transferegov_executores (
+    id_executor text,
+    id_plano_acao text,
+    cnpj_executor text,
+    nome_executor text,
+    objeto_executor text,
+    linha_carga bigint generated always as identity
+);
+
+create table if not exists raw.transferegov_planos_trabalho (
+    id_plano_trabalho text,
+    id_plano_acao text,
+    situacao_plano_trabalho text,
+    data_inicio_execucao_plano_trabalho text,
+    data_fim_execucao_plano_trabalho text,
+    prazo_execucao_meses_plano_trabalho text,
+    linha_carga bigint generated always as identity
+);
+
+create table if not exists raw.transferegov_empenhos (
+    id_empenho text,
+    id_plano_acao text,
+    numero_empenho text,
+    situacao_empenho text,
+    descricao_situacao_empenho text,
+    descricao_tipo_documento_empenho text,
+    data_emissao_empenho text,
+    categoria_despesa_empenho text,
+    valor_empenho text,
+    linha_carga bigint generated always as identity
+);
