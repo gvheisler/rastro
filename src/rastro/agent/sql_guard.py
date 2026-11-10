@@ -57,6 +57,7 @@ def guard_sql(query: str) -> GuardedQuery:
 
     tables = _check_tables(root)
     _check_functions(root)
+    _check_precedence(root)
     root, row_limit = _apply_limit(root)
     return GuardedQuery(root.sql(dialect="postgres"), tables, row_limit)
 
@@ -85,6 +86,15 @@ def _check_functions(root: exp.Expression) -> None:
     for function in root.find_all(exp.Anonymous):
         if function.name.lower() not in ALLOWED_FUNCTIONS:
             raise GuardError(f"Function '{function.name}' is not allowed.")
+
+
+def _check_precedence(root: exp.Expression) -> None:
+    for node in root.find_all(exp.Or):
+        if isinstance(node.this, exp.And) or isinstance(node.expression, exp.And):
+            raise GuardError(
+                "Mixing AND with OR without parentheses is ambiguous. "
+                "Add parentheses around each group of conditions."
+            )
 
 
 def _requested_limit(node: exp.Expression) -> int | None:

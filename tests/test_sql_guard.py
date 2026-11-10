@@ -107,3 +107,30 @@ def test_tables_lists_real_tables_and_not_ctes():
         "with t as (select * from convenios) select * from t join emendas using (codigo_emenda)"
     )
     assert guarded.tables == ("convenios", "emendas")
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        "select * from emendas where ano = 2024 and tipo_emenda = 'a' or tipo_emenda = 'b'",
+        "select * from emendas where ano = 2024 or tipo_emenda = 'a' and municipio = 'b'",
+        "select autor from emendas group by autor having count(*) > 1 and count(*) > 2 or 1 = 1",
+    ],
+)
+def test_mixing_and_with_or_without_parentheses_is_rejected(query):
+    with pytest.raises(GuardError, match="parentheses"):
+        guard_sql(query)
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        "select * from emendas where ano = 2024 and (tipo_emenda = 'a' or tipo_emenda = 'b')",
+        "select * from emendas where (ano = 2024 and tipo_emenda = 'a') or tipo_emenda = 'b'",
+        "select * from emendas where ano = 2024 and tipo_emenda = 'a' and municipio = 'b'",
+        "select * from emendas where ano = 2023 or ano = 2024 or ano = 2025",
+        "select * from emendas where ano in (select ano from emendas where ano = 1 or ano = 2)",
+    ],
+)
+def test_parenthesised_or_pure_conditions_are_accepted(query):
+    guard_sql(query)
