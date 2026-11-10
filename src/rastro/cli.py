@@ -7,6 +7,7 @@ from rastro.config import RAW_DIR
 from rastro.db import apply_sql, connect
 from rastro.ingest.federal import FILES, load_raw
 from rastro.mart import build_mart
+from rastro.quality.checks import run_checks
 
 app = typer.Typer(no_args_is_help=True, add_completion=False, help="Rastro data pipeline.")
 
@@ -40,3 +41,18 @@ def ingest(
 
     for name, rows in loaded.items():
         typer.echo(f"{name}: {rows:,} rows")
+
+
+@app.command()
+def check() -> None:
+    """Run data quality checks on the mart; exit with 1 if any error check fails."""
+    with connect() as conn:
+        results = run_checks(conn)
+
+    for result in results:
+        status = "FAIL" if result.failed else ("info" if result.check.severity == "info" else "ok")
+        typer.echo(
+            f"{status:<5} {result.check.name:<34} {result.count:>8,}  {result.check.description}"
+        )
+    if any(r.failed for r in results):
+        raise typer.Exit(1)

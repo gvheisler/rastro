@@ -40,3 +40,9 @@ def staging_db(db):
     load_raw(db, FIXTURES)
     apply_sql(db, "02_staging.sql")
     return db
+
+
+@pytest.fixture
+def mart_db(staging_db):
+    apply_sql(staging_db, "03_mart.sql")
+    return staging_db

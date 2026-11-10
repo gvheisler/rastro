@@ -12,12 +12,6 @@ FAV = "EmendasParlamentares_PorFavorecido.csv"
 TABLES = ["emendas", "convenios", "pagamentos_favorecidos", "fontes"]
 
 
-@pytest.fixture
-def mart_db(staging_db):
-    apply_sql(staging_db, "03_mart.sql")
-    return staging_db
-
-
 def sc_emenda_codes() -> set[str]:
     header, rows = read_csv(MAIN)
     uf, code = header.index("UF"), header.index("Código da Emenda")
