@@ -1,14 +1,16 @@
 import json
+import re
 import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, datetime
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Literal
 
 from psycopg import Connection
 
-from rastro.agent.llm import Completion, LLMClient, LLMError, Message, ToolCall
+from rastro.agent.llm import Completion, LLMClient, LLMError, Message, ToolCall, build_llm
 from rastro.agent.prompt import system_prompt
 from rastro.agent.sql_guard import GuardError
 from rastro.agent.tools import (
@@ -19,6 +21,8 @@ from rastro.agent.tools import (
     format_result,
     run_query,
 )
+from rastro.config import LOG_DIR, get_settings
+from rastro.db import connect_readonly
 
 NO_RESULTS_TEXT = "Não encontrei registros nos dados para essa consulta."
 FAILED_TEXT = "Não consegui obter esses números nos dados. Tente reformular a pergunta."
@@ -53,6 +57,7 @@ class Answer:
     rows: tuple[tuple[Any, ...], ...] = ()
     truncated: bool = False
     sources: tuple[Source, ...] = ()
+    unverified_numbers: tuple[str, ...] = ()
     model: str = ""
     steps: int = 0
     guard_blocks: int = 0
@@ -197,7 +202,14 @@ class Agent:
         }
         if _is_empty(result):
             return Answer(question, "no_results", NO_RESULTS_TEXT, **base)
-        return Answer(question, "answered", text.strip() or EMPTY_TEXT, **base)
+        text = text.strip() or EMPTY_TEXT
+        return Answer(
+            question,
+            "answered",
+            text,
+            unverified_numbers=unverified_numbers(text, result.rows),
+            **base,
+        )
 
     def _sources(self, tables: Sequence[str]) -> tuple[Source, ...]:
         rows = self._conn.execute(
@@ -231,6 +243,31 @@ class Agent:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+NUMBER = re.compile(r"\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:,\d+)?")
+CENTS = Decimal("0.01")
+
+
+def unverified_numbers(text: str, rows: Sequence[Sequence[Any]]) -> tuple[str, ...]:
+    """Numbers written in the answer that do not appear in the query result.
+
+    Small integers and years are ignored; derived values, such as a difference
+    the model computed itself, are reported too.
+    """
+    known = {
+        Decimal(value).quantize(CENTS)
+        for row in rows
+        for value in row
+        if isinstance(value, int | Decimal) and not isinstance(value, bool)
+    }
+    missing = []
+    for token in NUMBER.findall(text):
+        value = Decimal(token.replace(".", "").replace(",", "."))
+        plain = token.isdigit() and (value <= 31 or 1900 <= value <= 2100)
+        if not plain and value.quantize(CENTS) not in known:
+            missing.append(token)
+    return tuple(missing)
+
+
 def _is_empty(result: QueryResult) -> bool:
     return not result.rows or all(value is None for row in result.rows for value in row)
 
@@ -255,3 +292,9 @@ def _history_messages(previous: Answer) -> list[Message]:
         {"role": "user", "content": previous.question},
         {"role": "assistant", "content": reply},
     ]
+
+
+def build_agent() -> Agent:
+    """An agent wired to the configured model and the read-only database role."""
+    settings = get_settings()
+    return Agent(build_llm(settings), connect_readonly(), log_path=LOG_DIR / "agent.jsonl")

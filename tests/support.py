@@ -2,6 +2,8 @@ import csv
 from decimal import Decimal
 from pathlib import Path
 
+from rastro.agent.llm import Completion, ToolCall
+
 FIXTURES = Path(__file__).parent / "fixtures"
 
 
@@ -23,3 +25,32 @@ def money(text: str) -> Decimal:
 
 def scalar(conn, query: str, params=None):
     return conn.execute(query, params).fetchone()[0]
+
+
+class ScriptedLLM:
+    """Replays prepared completions and records the messages it was sent."""
+
+    model = "scripted"
+
+    def __init__(self, *completions):
+        self.completions = list(completions)
+        self.calls = []
+
+    def complete(self, messages, tools):
+        self.calls.append([dict(m) for m in messages])
+        item = self.completions.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
+
+
+def call(name, **arguments):
+    return Completion("", (ToolCall(f"id{name}", name, arguments),), 10, 5)
+
+
+def say(text):
+    return Completion(text, (), 10, 5)
+
+
+def sql(query):
+    return call("run_sql", sql=query)

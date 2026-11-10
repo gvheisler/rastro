@@ -1,36 +1,11 @@
 import json
+from decimal import Decimal
 
 import pytest
 
 from rastro.agent.llm import Completion, LLMError, ToolCall
-from rastro.agent.run import NO_RESULTS_TEXT, Agent
-
-
-class ScriptedLLM:
-    model = "scripted"
-
-    def __init__(self, *completions):
-        self.completions = list(completions)
-        self.calls = []
-
-    def complete(self, messages, tools):
-        self.calls.append([dict(m) for m in messages])
-        item = self.completions.pop(0)
-        if isinstance(item, Exception):
-            raise item
-        return item
-
-
-def call(name, **arguments):
-    return Completion("", (ToolCall(f"id{name}", name, arguments),), 10, 5)
-
-
-def say(text):
-    return Completion(text, (), 10, 5)
-
-
-def sql(query):
-    return call("run_sql", sql=query)
+from rastro.agent.run import NO_RESULTS_TEXT, Agent, unverified_numbers
+from support import ScriptedLLM, call, say, sql
 
 
 def agent_for(readonly, *completions, **kwargs):
@@ -226,3 +201,39 @@ def test_each_question_is_logged_as_a_json_line(readonly, tmp_path):
     assert "select count(*)" in record["sql"].lower()
     assert record["rows"] == 1
     assert {"timestamp", "latency_s", "steps", "input_tokens", "output_tokens"} <= record.keys()
+
+
+def test_numbers_that_match_the_result_are_not_flagged():
+    rows = ((Decimal("783700816.63"), 2009),)
+    assert unverified_numbers("Foram pagos R$ 783.700.816,63 em 2.009 emendas.", rows) == ()
+
+
+@pytest.mark.parametrize(
+    ("text", "flagged"),
+    [
+        ("Foram pagos R$ 8.888.459,99.", ("8.888.459,99",)),
+        ("Em 2024, 3 municípios, em 10/11/2026.", ()),
+        ("Total: R$ 1.234.567,89 e R$ 999,00.", ("999,00",)),
+        ("Foram 2.009 emendas.", ("2.009",)),
+        ("Foram 7 emendas.", ()),
+    ],
+)
+def test_numbers_missing_from_the_result_are_flagged(text, flagged):
+    rows = ((Decimal("1234567.89"), 7),)
+    assert unverified_numbers(text, rows) == flagged
+
+
+def test_the_agent_reports_unverified_numbers(readonly):
+    agent, _ = agent_for(
+        readonly, sql("select 1234567.89 as v from fontes limit 1"), say("Foram R$ 8.888.459,99.")
+    )
+    answer = agent.ask("?")
+    assert answer.status == "answered"
+    assert answer.unverified_numbers == ("8.888.459,99",)
+
+
+def test_verified_answers_have_nothing_to_report(readonly):
+    agent, _ = agent_for(
+        readonly, sql("select 1234567.89 as v from fontes limit 1"), say("Foram R$ 1.234.567,89.")
+    )
+    assert agent.ask("?").unverified_numbers == ()
