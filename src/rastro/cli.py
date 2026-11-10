@@ -3,6 +3,8 @@ from typing import Annotated
 
 import typer
 
+from rastro.agent.run import Answer, build_agent
+from rastro.agent.tools import format_table
 from rastro.config import RAW_DIR
 from rastro.db import apply_sql, connect
 from rastro.ingest.federal import FILES, load_raw
@@ -56,3 +58,26 @@ def check() -> None:
         )
     if any(r.failed for r in results):
         raise typer.Exit(1)
+
+
+@app.command()
+def ask(question: Annotated[str, typer.Argument(help="Question in Portuguese.")]) -> None:
+    """Ask the agent a question about amendments to Santa Catarina."""
+    answer = build_agent().ask(question)
+    if answer.error:
+        typer.echo(f"{answer.text} ({answer.error})", err=True)
+        raise typer.Exit(1)
+    typer.echo(_render(answer))
+
+
+def _render(answer: Answer) -> str:
+    parts = [answer.text]
+    if answer.sql:
+        parts.append(f"SQL\n{answer.sql}")
+        parts.append("Resultado\n" + format_table(answer.columns, answer.rows, 20))
+    for source in answer.sources:
+        parts.append(
+            f"Fonte: {source.fonte}, {source.arquivo}, {source.ano_inicio} a {source.ano_fim}, "
+            f"carregado em {source.carregado_em:%d/%m/%Y}"
+        )
+    return "\n\n".join(parts)
