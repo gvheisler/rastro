@@ -3,7 +3,7 @@ from decimal import Decimal
 import pytest
 
 from rastro.agent.sql_guard import GuardError
-from rastro.agent.tools import QueryError, find_values, format_result, run_query
+from rastro.agent.tools import QueryError, QueryResult, find_values, format_result, run_query
 
 
 def test_run_query_returns_columns_rows_and_tables(readonly):
@@ -91,3 +91,21 @@ def test_find_values_treats_wildcards_literally(readonly):
 def test_find_values_rejects_unknown_kinds(readonly):
     with pytest.raises(QueryError, match="municipio"):
         find_values(readonly, "cpf", "123")
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        (Decimal("888845998.75"), "888.845.998,75"),
+        (Decimal("1234567.5"), "1.234.567,50"),
+        (Decimal("0"), "0,00"),
+        (Decimal("-15.3"), "-15,30"),
+        (Decimal("33.3333333333"), "33,33"),
+        (2024, "2024"),
+        (1234567, "1234567"),
+        (None, "NULL"),
+    ],
+)
+def test_numbers_are_written_in_brazilian_format_for_the_model(value, expected):
+    result = QueryResult("", (), ("v",), ((value,),), False, 0)
+    assert format_result(result).splitlines()[1] == expected

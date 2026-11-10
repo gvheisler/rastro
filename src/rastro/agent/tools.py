@@ -1,4 +1,5 @@
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal
@@ -148,13 +149,22 @@ def find_values(conn: Connection, kind: str, text: str) -> list[tuple[str, int]]
 
 def format_result(result: QueryResult, max_rows: int = MODEL_ROWS) -> str:
     """Compact text rendering of a result for the model."""
-    if not result.rows:
+    return format_table(result.columns, result.rows, max_rows, result.truncated)
+
+
+def format_table(
+    columns: Sequence[str],
+    rows: Sequence[Sequence[Any]],
+    max_rows: int,
+    truncated: bool = False,
+) -> str:
+    if not rows:
         return "0 rows"
-    lines = [" | ".join(result.columns)]
-    lines += [" | ".join(_cell(value) for value in row) for row in result.rows[:max_rows]]
-    if len(result.rows) > max_rows:
-        lines.append(f"(showing {max_rows} of {len(result.rows)} rows)")
-    if result.truncated:
+    lines = [" | ".join(columns)]
+    lines += [" | ".join(_cell(value) for value in row) for row in rows[:max_rows]]
+    if len(rows) > max_rows:
+        lines.append(f"(showing {max_rows} of {len(rows)} rows)")
+    if truncated:
         lines.append(f"(result cut at {MAX_ROWS} rows)")
     return "\n".join(lines)
 
@@ -163,11 +173,16 @@ def _cell(value: Any) -> str:
     if value is None:
         return "NULL"
     if isinstance(value, Decimal):
-        return format(value, "f")
+        return _brazilian(value)
     if isinstance(value, date | datetime):
         return value.isoformat()
     text = str(value).replace("\n", " ")
     return text if len(text) <= CELL_CHARS else text[: CELL_CHARS - 1] + "…"
+
+
+def _brazilian(value: Decimal) -> str:
+    text = f"{value:,.2f}"
+    return text.replace(",", "\0").replace(".", ",").replace("\0", ".")
 
 
 def _describe(error: psycopg.Error) -> str:
