@@ -152,17 +152,23 @@ def test_municipality_takes_the_portal_spelling_and_ibge_code(mart_db):
     add_plan(mart_db, 990004, beneficiary="MUNICIPIO DE SAO LOURENCO D'OESTE")
     add_plan(mart_db, 990005, beneficiary="MUNICIPIO DE BALNEARIO DE PICARRAS")
     add_plan(mart_db, 990006, beneficiary="NAVEGANTES")
+    mart_db.execute(
+        "insert into staging.emendas (uf_sigla, municipio, codigo_municipio_ibge) "
+        "values ('SC', 'HERVAL D''OESTE', 4207304)"
+    )
+    add_plan(mart_db, 990024, beneficiary="MUNICIPIO DE HERVAL D'OESTE")
     rebuild(mart_db)
     rows = dict(
         (r[0], r[1:])
         for r in mart_db.execute(
             f"select id_plano_acao, municipio, codigo_municipio_ibge from {PLANS} "
-            "where id_plano_acao in (990004, 990005, 990006)"
+            "where id_plano_acao in (990004, 990005, 990006, 990024)"
         )
     )
     assert rows[990004] == ("SÃO LOURENÇO DO OESTE", 4216909)
     assert rows[990005] == ("BALNEÁRIO PIÇARRAS", 4212809)
     assert rows[990006][0] == "NAVEGANTES"
+    assert rows[990024] == ("HERVAL D'OESTE", 4207304)
 
 
 def test_an_unknown_municipality_keeps_the_name_from_the_beneficiary(mart_db):

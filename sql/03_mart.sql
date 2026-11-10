@@ -86,11 +86,12 @@ create table mart.transferencias_especiais as
 with municipios as (
     select distinct on (chave) chave, municipio, codigo_municipio_ibge
     from (
-        select unaccent(upper(municipio)) as chave, municipio, codigo_municipio_ibge, 1 as ordem
+        select replace(unaccent(upper(municipio)), 'D''OESTE', 'DO OESTE') as chave,
+            municipio, codigo_municipio_ibge, 1 as ordem
         from staging.emendas
         where uf_sigla = 'SC' and municipio is not null
         union all
-        select unaccent(upper(municipio)), municipio, null, 2
+        select replace(unaccent(upper(municipio)), 'D''OESTE', 'DO OESTE'), municipio, null, 2
         from staging.convenios
         where uf_sigla = 'SC' and municipio is not null
     ) nomes
