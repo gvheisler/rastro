@@ -5,4 +5,30 @@ toolbarMode = "minimal"
 gatherUsageStats = false
 
 [theme]
+font = "sans-serif"
+headingFont = "serif"
+codeFont = "monospace"
+headingFontSizes = ["2.8rem", "1.7rem", "1.25rem"]
+headingFontWeights = [600, 600, 600]
+baseRadius = "0.5rem"
+buttonRadius = "0.5rem"
+showWidgetBorder = true
+showSidebarBorder = true
+
+[theme.light]
 primaryColor = "#1f6f50"
+backgroundColor = "#f6f8f7"
+secondaryBackgroundColor = "#e8eeeb"
+textColor = "#16221c"
+borderColor = "#c9d5ce"
+codeBackgroundColor = "#e8eeeb"
+dataframeHeaderBackgroundColor = "#e8eeeb"
+
+[theme.dark]
+primaryColor = "#5bc49a"
+backgroundColor = "#101714"
+secondaryBackgroundColor = "#19231e"
+textColor = "#e4ece7"
+borderColor = "#2c3b33"
+codeBackgroundColor = "#19231e"
+dataframeHeaderBackgroundColor = "#19231e"
