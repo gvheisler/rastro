@@ -43,8 +43,9 @@ Os dados passam por três camadas: `raw` guarda os CSVs do Portal da Transparên
 1. Uma triagem simples recusa, antes do modelo, pedidos para alterar dados, pedir CPF ou acusar pessoas.
 2. O modelo recebe o esquema do `mart` e escolhe entre quatro ferramentas: `run_sql`, `find_values` (como um nome está escrito nos dados), `ask_clarification` e `refuse`.
 3. Todo SQL passa pelo `sql_guard`: uma única instrução `SELECT`, só tabelas do `mart`, sem funções de sistema (como `pg_sleep` ou `current_setting`), `AND` e `OR` com parênteses e `LIMIT` de no máximo 200 linhas. A consulta roda com um usuário Postgres somente leitura e limite de 10 s.
-4. A resposta mostra o texto, o SQL, a tabela com o resultado e a fonte. Resultado vazio vira "não encontrei" e valores do texto que não aparecem no resultado são sinalizados.
-5. Cada pergunta, SQL, tempo e modelo ficam em `logs/agent.jsonl`.
+4. Enquanto o agente trabalha, o chat lista cada etapa (entender a pergunta, consultar o banco, escrever a resposta, conferir os números) com o tempo de cada uma, e a lista fica na resposta.
+5. A resposta mostra o texto, a tabela com o resultado, a fonte e o SQL. Resultado vazio vira "não encontrei" e valores do texto que não aparecem no resultado são sinalizados.
+6. Cada pergunta, SQL, tempo e modelo ficam em `logs/agent.jsonl`.
 
 O cliente usa a API de chat compatível com OpenAI. Foi testado com o Ollama; outro servidor compatível, como o vLLM, deve funcionar ajustando `LLM_BASE_URL`, `LLM_MODEL` e `LLM_EXTRA_BODY` no `.env`.
 
