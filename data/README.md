@@ -38,6 +38,20 @@ Consultada em 10/11/2026; a API informou atualização em 10/11/2026.
 
 Como não há arquivo, o SHA-256 de cada carga (do conteúdo recebido, ordenado pelo id) fica em `raw.cargas`, junto com o número de linhas e a data de atualização da API. Os campos carregados e as verificações estão em [`docs/data-dictionary.md`](../docs/data-dictionary.md).
 
+## Painel do TCE/SC (reconciliação)
+
+Painel Emendas Parlamentares do Farol TCE/SC: https://paineistransparencia.tce.sc.gov.br/extensions/appEmendasParlamentares/index.html
+
+Exportado em 10/11/2026; o painel informava última atualização em 10/11/2026 às 10:30. Para exportar de novo: na aba "Detalhamento", use o botão de download da tabela "Detalhamento das Emendas Parlamentares", sem filtros. O painel gera um `.xlsx` em um link temporário do mesmo domínio. Salve em `data/raw/` com a data no nome.
+
+| Arquivo | Linhas | Tamanho | SHA-256 |
+| --- | --- | --- | --- |
+| `tce_painel_emendas_detalhamento_2026-11-10.xlsx` | 37.776 | 2,7 MB | `9e68999caff4362d70e26e03abf103c44d81cfb699a19b8134ecedb20625d6b0` |
+
+Uma aba, 13 colunas: Ente Autor, Localidade do Beneficiário, Código do Autor, Autor, Ano, Emenda, Razão Social do Beneficiário, CNPJ Beneficiário, Custeio, Investimento, Descrição Objeto, Data Aprovação e Data Atualização Cadastral. O valor de cada linha é Custeio mais Investimento.
+
+O painel cobre emendas federais, estaduais e municipais com impacto em Santa Catarina, e os valores são pagos. Emendas federais e estaduais só aparecem quando chegam à fase de pagamento. As federais são as linhas com Ente Autor `UNIAO`. O arquivo não é carregado no banco; serve só para conferir os valores do Portal.
+
 ## Amostra de teste
 
 `tests/fixtures/` tem uma amostra dos três arquivos, no mesmo formato: cerca de 260 linhas de SC e 40 de outros estados, mais as linhas relacionadas nos outros dois arquivos. Pessoas físicas são mascaradas e linhas com sequência de 11 dígitos no nome são descartadas. Para gerar de novo: `uv run python scripts/make_fixture.py`.
