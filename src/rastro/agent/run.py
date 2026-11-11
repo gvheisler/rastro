@@ -12,6 +12,7 @@ from psycopg import Connection
 
 from rastro.agent.llm import Completion, LLMClient, LLMError, Message, ToolCall, build_llm
 from rastro.agent.prompt import system_prompt
+from rastro.agent.question_check import unrequested_filters
 from rastro.agent.screen import screen
 from rastro.agent.sql_guard import GuardError
 from rastro.agent.tools import (
@@ -36,7 +37,15 @@ NUDGE = (
 
 Status = Literal["answered", "no_results", "clarification", "refused", "failed"]
 StepKind = Literal[
-    "understand", "lookup", "plan", "query", "blocked", "sql_error", "answer", "verify"
+    "understand",
+    "lookup",
+    "plan",
+    "query",
+    "blocked",
+    "unrequested_filter",
+    "sql_error",
+    "answer",
+    "verify",
 ]
 Phase = Literal["start", "lookup", "result", "blocked", "sql_error"]
 
@@ -76,6 +85,8 @@ class Answer:
     model: str = ""
     steps: int = 0
     guard_blocks: int = 0
+    filter_blocks: int = 0
+    unrequested_filters: tuple[str, ...] = ()
     sql_errors: int = 0
     latency_s: float = 0.0
     input_tokens: int = 0
@@ -94,6 +105,9 @@ class Answer:
 class _Turn:
     result: QueryResult | None = None
     guard_blocks: int = 0
+    filter_blocks: int = 0
+    flagged: set[str] = field(default_factory=set)
+    asked: str = ""
     sql_errors: int = 0
     steps: int = 0
     input_tokens: int = 0
@@ -159,6 +173,7 @@ class Agent:
         answer.model = self._llm.model
         answer.steps = turn.steps
         answer.guard_blocks = turn.guard_blocks
+        answer.filter_blocks = turn.filter_blocks
         answer.sql_errors = turn.sql_errors
         answer.input_tokens = turn.input_tokens
         answer.output_tokens = turn.output_tokens
@@ -171,6 +186,7 @@ class Agent:
         for previous in history:
             messages += _history_messages(previous)
         messages.append({"role": "user", "content": question})
+        turn.asked = " ".join([previous.question for previous in history] + [question])
 
         while turn.steps < self._max_steps:
             turn.steps += 1
@@ -240,6 +256,13 @@ class Agent:
 
     def _run_sql(self, query: str, turn: _Turn) -> str:
         turn.begin("query", query)
+        unasked = [f for f in unrequested_filters(query, turn.asked) if f not in turn.flagged]
+        if unasked:
+            turn.flagged.update(unasked)
+            turn.filter_blocks += 1
+            turn.begin("unrequested_filter")
+            turn.phase = "blocked"
+            return _filter_message(unasked)
         try:
             turn.result = run_query(self._conn, query)
         except GuardError as error:
@@ -276,6 +299,7 @@ class Agent:
             "answered",
             text,
             unverified_numbers=unverified_numbers(text, result.rows),
+            unrequested_filters=tuple(unrequested_filters(result.sql, turn.asked)),
             **base,
         )
 
@@ -301,6 +325,8 @@ class Agent:
             "latency_s": answer.latency_s,
             "steps": answer.steps,
             "guard_blocks": answer.guard_blocks,
+            "filter_blocks": answer.filter_blocks,
+            "unrequested_filters": list(answer.unrequested_filters),
             "sql_errors": answer.sql_errors,
             "input_tokens": answer.input_tokens,
             "output_tokens": answer.output_tokens,
@@ -334,6 +360,15 @@ def unverified_numbers(text: str, rows: Sequence[Sequence[Any]]) -> tuple[str, .
         if not plain and value.quantize(CENTS) not in known:
             missing.append(token)
     return tuple(missing)
+
+
+def _filter_message(filters: Sequence[str]) -> str:
+    return (
+        "Query not run: the question does not ask for these conditions: "
+        + "; ".join(filters)
+        + ". Remove them and run the query again. If the answer really depends on one of them, "
+        "use ask_clarification instead of assuming."
+    )
 
 
 def _is_empty(result: QueryResult) -> bool:

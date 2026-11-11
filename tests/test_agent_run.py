@@ -322,3 +322,75 @@ def test_an_empty_result_skips_the_number_check(readonly):
     )
     answer = agent.ask("Quanto em 1900?")
     assert kinds(answer.trace) == ["understand", "query", "answer"]
+
+
+BY_FUNCTION_IN_CITIES = (
+    "select funcao, sum(valor_pago) as total from emendas "
+    "where localidade_tipo = 'municipio' group by funcao"
+)
+BY_FUNCTION = "select funcao, sum(valor_pago) as total from emendas group by funcao"
+
+
+def test_a_filter_the_question_did_not_ask_for_is_sent_back_before_running(readonly):
+    agent, llm = agent_for(
+        readonly, sql(BY_FUNCTION_IN_CITIES), sql(BY_FUNCTION), say("Por função.")
+    )
+    answer = agent.ask("Quais funções receberam mais valor pago?")
+    assert answer.status == "answered"
+    assert answer.filter_blocks == 1
+    assert "localidade_tipo = 'municipio'" in llm.calls[1][-1]["content"]
+    assert "localidade_tipo" not in answer.sql
+    assert answer.unrequested_filters == ()
+    assert kinds(answer.trace) == [
+        "understand",
+        "query",
+        "unrequested_filter",
+        "query",
+        "answer",
+        "verify",
+    ]
+
+
+def test_a_model_that_insists_on_the_filter_gets_its_answer_flagged(readonly):
+    agent, _ = agent_for(
+        readonly, sql(BY_FUNCTION_IN_CITIES), sql(BY_FUNCTION_IN_CITIES), say("Por função.")
+    )
+    answer = agent.ask("Quais funções receberam mais valor pago?")
+    assert answer.status == "answered"
+    assert answer.filter_blocks == 1
+    assert answer.unrequested_filters == ("localidade_tipo = 'municipio'",)
+
+
+def test_a_question_that_asks_for_the_filter_is_not_challenged(readonly):
+    agent, _ = agent_for(readonly, sql(BY_FUNCTION_IN_CITIES), say("Por função."))
+    answer = agent.ask("Quais funções receberam mais valor pago nos municípios?")
+    assert answer.filter_blocks == 0
+    assert answer.unrequested_filters == ()
+
+
+def test_earlier_questions_in_the_conversation_justify_a_filter(readonly):
+    agent, _ = agent_for(
+        readonly,
+        sql("select sum(valor_pago) as total from emendas where ano = 2023"),
+        say("Primeira."),
+        sql("select sum(valor_empenhado) as total from emendas where ano = 2023"),
+        say("Segunda."),
+    )
+    first = agent.ask("Quanto foi pago em 2023?")
+    second = agent.ask("E empenhado?", [first])
+    assert (first.filter_blocks, second.filter_blocks) == (0, 0)
+
+
+def test_filter_checks_are_logged(readonly, tmp_path):
+    log = tmp_path / "agent.jsonl"
+    agent, _ = agent_for(
+        readonly,
+        sql(BY_FUNCTION_IN_CITIES),
+        sql(BY_FUNCTION_IN_CITIES),
+        say("Por função."),
+        log_path=log,
+    )
+    agent.ask("Quais funções receberam mais valor pago?")
+    record = json.loads(log.read_text().splitlines()[0])
+    assert record["filter_blocks"] == 1
+    assert record["unrequested_filters"] == ["localidade_tipo = 'municipio'"]
