@@ -17,6 +17,17 @@ RELATIVE_YEAR = re.compile(
     r"este ano|neste ano|ano atual|ano corrente|ano passado|ultimo ano|ultimos|recente|"
     r"atualmente|hoje|atual"
 )
+VALUE_LABELS = {
+    "valor_pago": "o valor pago",
+    "valor_empenhado": "o valor empenhado",
+    "valor_liquidado": "o valor liquidado",
+    "valor_planejado": "o valor planejado",
+    "valor_restos_a_pagar_inscritos": "os restos a pagar inscritos",
+    "valor_restos_a_pagar_cancelados": "os restos a pagar cancelados",
+    "valor_restos_a_pagar_pagos": "os restos a pagar pagos",
+}
+VALUE_WORDS = re.compile(r"pag|empenh|liquid|planej|previst|resto")
+EMENDA_YEAR_COLUMNS = frozenset({"ano", "ano_emenda"})
 MENTIONS = {
     "localidade_tipo": re.compile(r"municip|cidade|prefeitura|estad|multipl|localidade"),
     "tipo_emenda": re.compile(r"individua|bancada|comiss|relator|especia|pix|finalidade|tipo"),
@@ -27,16 +38,12 @@ MENTIONS = {
 def unrequested_filters(query: str, asked: str) -> list[str]:
     """Conditions on year, location type, amendment type or the impeded flag that the
     question never mentions. `asked` is the current question plus the earlier ones."""
-    try:
-        root = sqlglot.parse_one(query, read="postgres")
-    except SqlglotError:
-        return []
+    root = _parse(query)
     if root is None:
         return []
 
     text = _plain(asked)
-    columns = {column.name.lower() for column in root.find_all(exp.Column)}
-    names_a_place = bool(columns & MUNICIPALITY_COLUMNS)
+    names_a_place = bool(_column_names(root) & MUNICIPALITY_COLUMNS)
     found: list[str] = []
     for node in _conditions(root):
         column = _filtered_column(node)
@@ -46,6 +53,63 @@ def unrequested_filters(query: str, asked: str) -> list[str]:
         if sql not in found:
             found.append(sql)
     return found
+
+
+def unrequested_values(query: str, asked: str) -> list[str]:
+    """Value columns the query uses together, when the question never named a value."""
+    used = _unnamed_values(query, asked)
+    return used if len(used) > 1 else []
+
+
+def value_assumption(query: str, asked: str) -> str | None:
+    """The sentence that says which value the query used, when the question never named one."""
+    used = _unnamed_values(query, asked)
+    if not used:
+        return None
+    labels = [VALUE_LABELS[name] for name in used]
+    names = labels[0] if len(labels) == 1 else f"{', '.join(labels[:-1])} e {labels[-1]}"
+    return f"Você não disse qual valor queria; usei {names}."
+
+
+def year_assumption(query: str) -> str | None:
+    """Says that a paid value filtered by year follows the year of the emenda, not the payment."""
+    root = _parse(query)
+    if root is None or "valor_pago" not in _column_names(root):
+        return None
+    for node in _conditions(root):
+        operands = (node.this, node.args.get("expression"))
+        if any(
+            isinstance(operand, exp.Column) and operand.name.lower() in EMENDA_YEAR_COLUMNS
+            for operand in operands
+        ):
+            return (
+                "Considerei o ano da emenda no orçamento, não a data do pagamento "
+                f"(`{node.sql(dialect='postgres')}`)."
+            )
+    return None
+
+
+def _unnamed_values(query: str, asked: str) -> list[str]:
+    root = None if _names_a_value(asked) else _parse(query)
+    if root is None:
+        return []
+    columns = _column_names(root)
+    return [name for name in VALUE_LABELS if name in columns]
+
+
+def _parse(query: str) -> exp.Expression | None:
+    try:
+        return sqlglot.parse_one(query, read="postgres")
+    except SqlglotError:
+        return None
+
+
+def _column_names(root: exp.Expression) -> set[str]:
+    return {column.name.lower() for column in root.find_all(exp.Column)}
+
+
+def _names_a_value(text: str) -> bool:
+    return VALUE_WORDS.search(_plain(text)) is not None
 
 
 def _conditions(root: exp.Expression) -> list[exp.Expression]:
