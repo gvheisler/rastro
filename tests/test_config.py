@@ -15,6 +15,7 @@ def test_dsn_uses_environment(monkeypatch):
 def test_readonly_dsn_uses_the_readonly_credentials(monkeypatch):
     monkeypatch.setenv("POSTGRES_PASSWORD", "segredo")
     monkeypatch.setenv("READONLY_PASSWORD", "leitura")
+    monkeypatch.delenv("POSTGRES_PORT", raising=False)
     settings = Settings(_env_file=None)
     assert settings.readonly_dsn == (
         "host=localhost port=5433 dbname=rastro user=rastro_ro password=leitura"

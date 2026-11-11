@@ -64,3 +64,11 @@ def readonly(staging_db, monkeypatch):
     monkeypatch.setenv("POSTGRES_DB", staging_db.info.dbname)
     with connect_readonly() as conn:
         yield conn
+
+
+@pytest.fixture(autouse=True)
+def _no_ambient_llm_settings(monkeypatch):
+    """Tests must not depend on the LLM variables of whoever runs them."""
+    for name in list(os.environ):
+        if name.startswith("LLM_") or name == "ANTHROPIC_API_KEY":
+            monkeypatch.delenv(name)
