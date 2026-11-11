@@ -68,3 +68,10 @@ def test_prompt_explains_when_to_use_the_special_transfer_tables(readonly):
 
 def test_prompt_forbids_filters_the_question_did_not_ask_for(readonly):
     assert "Não acrescente filtros" in system_prompt(readonly, TODAY)
+
+
+def test_prompt_tells_the_model_to_decide_instead_of_asking(readonly):
+    prompt = system_prompt(readonly, TODAY)
+    assert "não é motivo para perguntar" in prompt
+    assert "ano >= 2020" in prompt
+    assert "Só chame ask_clarification" in prompt

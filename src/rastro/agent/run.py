@@ -12,7 +12,12 @@ from psycopg import Connection
 
 from rastro.agent.llm import Completion, LLMClient, LLMError, Message, ToolCall, build_llm
 from rastro.agent.prompt import system_prompt
-from rastro.agent.question_check import unrequested_filters
+from rastro.agent.question_check import (
+    unrequested_filters,
+    unrequested_values,
+    value_assumption,
+    year_assumption,
+)
 from rastro.agent.screen import screen
 from rastro.agent.sql_guard import GuardError
 from rastro.agent.tools import (
@@ -33,6 +38,11 @@ EMPTY_TEXT = "Segue o resultado da consulta."
 NUDGE = (
     "Você ainda não consultou o banco. Use run_sql para obter os números; se os dados não "
     "puderem responder, use refuse ou ask_clarification."
+)
+CLARIFICATION_PUSHBACK = (
+    "Do not ask the user yet. Doubt about which value, year or table is not a reason to ask: "
+    "pick the default from the rules and run the query with run_sql. Call ask_clarification "
+    "again only if the request has nothing to measure or list."
 )
 
 Status = Literal["answered", "no_results", "clarification", "refused", "failed"]
@@ -82,6 +92,7 @@ class Answer:
     truncated: bool = False
     sources: tuple[Source, ...] = ()
     unverified_numbers: tuple[str, ...] = ()
+    assumptions: tuple[str, ...] = ()
     model: str = ""
     steps: int = 0
     guard_blocks: int = 0
@@ -107,8 +118,10 @@ class _Turn:
     guard_blocks: int = 0
     filter_blocks: int = 0
     flagged: set[str] = field(default_factory=set)
+    values_flagged: bool = False
     asked: str = ""
     sql_errors: int = 0
+    pushed_back: bool = False
     steps: int = 0
     input_tokens: int = 0
     output_tokens: int = 0
@@ -246,6 +259,9 @@ class Agent:
                     return "No matching values."
                 return "\n".join(f"{value} | {count} rows" for value, count in found)
             case "ask_clarification":
+                if not turn.pushed_back:
+                    turn.pushed_back = True
+                    return CLARIFICATION_PUSHBACK
                 turn.terminal = ("clarification", str(args.get("question", "")).strip())
                 return ""
             case "refuse":
@@ -257,12 +273,14 @@ class Agent:
     def _run_sql(self, query: str, turn: _Turn) -> str:
         turn.begin("query", query)
         unasked = [f for f in unrequested_filters(query, turn.asked) if f not in turn.flagged]
-        if unasked:
+        values = [] if turn.values_flagged else unrequested_values(query, turn.asked)
+        if unasked or values:
             turn.flagged.update(unasked)
+            turn.values_flagged = turn.values_flagged or bool(values)
             turn.filter_blocks += 1
             turn.begin("unrequested_filter")
             turn.phase = "blocked"
-            return _filter_message(unasked)
+            return _unrequested_message(unasked, values)
         try:
             turn.result = run_query(self._conn, query)
         except GuardError as error:
@@ -289,6 +307,7 @@ class Agent:
             "rows": result.rows,
             "truncated": result.truncated,
             "sources": self._sources(result.tables),
+            "assumptions": _assumptions(result.sql, turn.asked),
         }
         if _is_empty(result):
             return Answer(question, "no_results", NO_RESULTS_TEXT, **base)
@@ -327,6 +346,7 @@ class Agent:
             "guard_blocks": answer.guard_blocks,
             "filter_blocks": answer.filter_blocks,
             "unrequested_filters": list(answer.unrequested_filters),
+            "assumptions": list(answer.assumptions),
             "sql_errors": answer.sql_errors,
             "input_tokens": answer.input_tokens,
             "output_tokens": answer.output_tokens,
@@ -362,13 +382,29 @@ def unverified_numbers(text: str, rows: Sequence[Sequence[Any]]) -> tuple[str, .
     return tuple(missing)
 
 
-def _filter_message(filters: Sequence[str]) -> str:
-    return (
-        "Query not run: the question does not ask for these conditions: "
-        + "; ".join(filters)
-        + ". Remove them and run the query again. If the answer really depends on one of them, "
-        "use ask_clarification instead of assuming."
-    )
+def _unrequested_message(filters: Sequence[str], values: Sequence[str]) -> str:
+    parts = []
+    if filters:
+        parts.append(
+            "the question does not ask for these conditions: "
+            + "; ".join(filters)
+            + ". Remove them."
+        )
+    if values:
+        parts.append(
+            "the question does not name a value, yet the query uses several: "
+            + ", ".join(values)
+            + ". Use only the single value the rules give for this question (valor_pago for "
+            "emendas, valor_empenhado for transferencias_especiais), with no arithmetic "
+            "between values."
+        )
+    return "Query not run: " + " ".join(parts) + " Run the query again."
+
+
+def _assumptions(query: str, asked: str) -> tuple[str, ...]:
+    """What the answer tells the user about how the question was read, from the query itself."""
+    notes = (value_assumption(query, asked), year_assumption(query))
+    return tuple(note for note in notes if note)
 
 
 def _is_empty(result: QueryResult) -> bool:

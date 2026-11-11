@@ -238,6 +238,11 @@ def render_body(answer: Answer) -> None:
             "incompletos: "
             + ", ".join(f"`{condition}`" for condition in answer.unrequested_filters)
         )
+    if answer.assumptions:
+        st.info(
+            "**Como interpretei a pergunta**\n\n" + "\n".join(f"- {a}" for a in answer.assumptions),
+            icon=":material/lightbulb:",
+        )
     if not answer.sql:
         return
 

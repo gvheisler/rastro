@@ -98,10 +98,59 @@ def test_zero_is_a_real_answer(readonly):
     assert answer.rows == ((0,),)
 
 
-def test_clarification_ends_the_turn_without_running_sql(readonly):
-    agent, _ = agent_for(readonly, call("ask_clarification", question="Qual ano?"))
+def test_a_first_clarification_is_sent_back_so_the_model_decides_instead(readonly):
+    agent, llm = agent_for(
+        readonly,
+        call("ask_clarification", question="Pago ou empenhado?"),
+        sql("select sum(valor_pago) as total from emendas"),
+        say("Foram pagos R$ X."),
+    )
     answer = agent.ask("Quanto foi gasto?")
-    assert (answer.status, answer.text, answer.sql) == ("clarification", "Qual ano?", None)
+    assert answer.status == "answered"
+    assert answer.text == "Foram pagos R$ X."
+    pushback = llm.calls[1][-1]
+    assert pushback["tool_call_id"] == "idask_clarification"
+    assert "run_sql" in pushback["content"]
+
+
+def test_a_clarification_the_model_insists_on_ends_the_turn_without_running_sql(readonly):
+    agent, _ = agent_for(
+        readonly,
+        call("ask_clarification", question="Qual ano?"),
+        call("ask_clarification", question="Sobre o que você quer saber?"),
+    )
+    answer = agent.ask("Me fale das emendas")
+    assert (answer.status, answer.text, answer.sql) == (
+        "clarification",
+        "Sobre o que você quer saber?",
+        None,
+    )
+
+
+VALUE_NOTE = "Você não disse qual valor queria; usei o valor pago."
+YEAR_NOTE = "Considerei o ano da emenda no orçamento, não a data do pagamento (`ano >= 2020`)."
+PAID_SINCE_2020 = "select sum(valor_pago) as total from emendas where ano >= 2020"
+
+
+def test_the_answer_says_how_the_value_and_the_year_were_read_from_the_query_that_ran(readonly):
+    agent, _ = agent_for(
+        readonly,
+        sql("delete from emendas where ano >= 2020"),
+        sql(PAID_SINCE_2020),
+        say("ok"),
+    )
+    answer = agent.ask("Quanto foi gasto desde 2020?")
+    assert answer.assumptions == (VALUE_NOTE, YEAR_NOTE)
+
+
+def test_no_value_note_when_the_question_names_the_value(readonly):
+    agent, _ = agent_for(readonly, sql(PAID_SINCE_2020), say("ok"))
+    assert agent.ask("Quanto foi pago desde 2020?").assumptions == (YEAR_NOTE,)
+
+
+def test_a_clear_question_has_no_assumptions(readonly):
+    agent, _ = agent_for(readonly, sql("select count(*) as n from emendas"), say("ok"))
+    assert agent.ask("Quantas emendas há?").assumptions == ()
 
 
 def test_refusal_ends_the_turn_without_running_sql(readonly):
@@ -304,7 +353,11 @@ def test_blocked_and_failed_queries_show_up_as_retries(readonly):
 
 
 def test_a_clarification_only_shows_the_reading_step(readonly):
-    agent, _ = agent_for(readonly, call("ask_clarification", question="Qual ano?"))
+    agent, _ = agent_for(
+        readonly,
+        call("ask_clarification", question="Qual ano?"),
+        call("ask_clarification", question="Qual ano?"),
+    )
     answer = agent.ask("Quanto foi gasto?")
     assert kinds(answer.trace) == ["understand"]
 
@@ -351,6 +404,60 @@ def test_a_filter_the_question_did_not_ask_for_is_sent_back_before_running(reado
     ]
 
 
+def test_the_filter_message_does_not_send_the_model_to_ask_the_user(readonly):
+    agent, llm = agent_for(
+        readonly, sql(BY_FUNCTION_IN_CITIES), sql(BY_FUNCTION_IN_CITIES), say("Por função.")
+    )
+    agent.ask("Quais funções receberam mais valor pago?")
+    assert "ask_clarification" not in llm.calls[1][-1]["content"]
+
+
+TWO_VALUES = (
+    "select sum(valor_pago) as pago, sum(valor_liquidado) as liquidado from emendas "
+    "where ano >= 2020"
+)
+ONE_VALUE = "select sum(valor_pago) as pago from emendas where ano >= 2020"
+
+
+def test_several_values_the_question_did_not_name_are_sent_back_before_running(readonly):
+    agent, llm = agent_for(readonly, sql(TWO_VALUES), sql(ONE_VALUE), say("Pago desde 2020."))
+    answer = agent.ask("Quais os valores de emendas a partir de 2020?")
+    assert answer.status == "answered"
+    assert answer.filter_blocks == 1
+    message = llm.calls[1][-1]["content"]
+    assert "valor_pago" in message and "valor_liquidado" in message
+    assert "valor_empenhado for transferencias_especiais" in message
+    assert answer.assumptions == (VALUE_NOTE, YEAR_NOTE)
+    assert kinds(answer.trace) == [
+        "understand",
+        "query",
+        "unrequested_filter",
+        "query",
+        "answer",
+        "verify",
+    ]
+
+
+def test_a_model_that_insists_on_several_values_gets_them_listed_for_the_user(readonly):
+    agent, _ = agent_for(readonly, sql(TWO_VALUES), sql(TWO_VALUES), say("Pago e liquidado."))
+    answer = agent.ask("Quais os valores de emendas a partir de 2020?")
+    assert answer.status == "answered"
+    assert answer.filter_blocks == 1
+    assert answer.assumptions == (
+        "Você não disse qual valor queria; usei o valor pago e o valor liquidado.",
+        YEAR_NOTE,
+    )
+
+
+def test_filters_and_values_are_sent_back_together(readonly):
+    both = TWO_VALUES + " and localidade_tipo = 'municipio'"
+    agent, llm = agent_for(readonly, sql(both), sql(ONE_VALUE), say("ok"))
+    answer = agent.ask("Quais os valores de emendas a partir de 2020?")
+    message = llm.calls[1][-1]["content"]
+    assert "localidade_tipo = 'municipio'" in message and "valor_liquidado" in message
+    assert answer.filter_blocks == 1
+
+
 def test_a_model_that_insists_on_the_filter_gets_its_answer_flagged(readonly):
     agent, _ = agent_for(
         readonly, sql(BY_FUNCTION_IN_CITIES), sql(BY_FUNCTION_IN_CITIES), say("Por função.")
@@ -394,3 +501,10 @@ def test_filter_checks_are_logged(readonly, tmp_path):
     record = json.loads(log.read_text().splitlines()[0])
     assert record["filter_blocks"] == 1
     assert record["unrequested_filters"] == ["localidade_tipo = 'municipio'"]
+
+
+def test_assumptions_are_logged(readonly, tmp_path):
+    log = tmp_path / "agent.jsonl"
+    agent, _ = agent_for(readonly, sql(PAID_SINCE_2020), say("ok"), log_path=log)
+    agent.ask("Quanto foi pago desde 2020?")
+    assert json.loads(log.read_text().splitlines()[0])["assumptions"] == [YEAR_NOTE]

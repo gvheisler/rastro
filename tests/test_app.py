@@ -57,7 +57,12 @@ def test_an_answer_shows_text_sql_table_and_source(monkeypatch, readonly):
 
 
 def test_a_clarification_is_shown_without_sql_or_table(monkeypatch, readonly):
-    at = open_app(monkeypatch, readonly, call("ask_clarification", question="Qual ano?"))
+    at = open_app(
+        monkeypatch,
+        readonly,
+        call("ask_clarification", question="Qual ano?"),
+        call("ask_clarification", question="Qual ano?"),
+    )
     ask(at, "Quanto foi gasto?")
     assert "Qual ano?" in assistant_text(at)
     assert len(at.code) == 0
@@ -195,3 +200,24 @@ def test_a_filter_the_model_kept_after_being_challenged_is_flagged_and_listed_as
     warnings = " ".join(w.value for w in at.warning)
     assert "não pediu" in warnings and "localidade_tipo = 'municipio'" in warnings
     assert "filtro que a pergunta não pediu" in status_text(at.status[0])
+
+
+def test_how_the_question_was_read_is_shown_before_the_table(monkeypatch, readonly):
+    at = open_app(
+        monkeypatch,
+        readonly,
+        sql("select sum(valor_pago) as n from emendas where ano >= 2020"),
+        say("Foram pagos R$ X."),
+    )
+    ask(at, "Quanto foi gasto desde 2020?")
+    notes = [i.value for i in at.info]
+    assert len(notes) == 1
+    assert "Como interpretei a pergunta" in notes[0]
+    assert "usei o valor pago" in notes[0]
+    assert "Considerei o ano da emenda no orçamento" in notes[0]
+
+
+def test_a_clear_question_shows_no_interpretation_note(monkeypatch, readonly):
+    at = open_app(monkeypatch, readonly, sql("select count(*) as n from emendas"), say("ok"))
+    ask(at, "Quantas emendas?")
+    assert len(at.info) == 0

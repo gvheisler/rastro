@@ -64,8 +64,9 @@ TOOL_SPECS: list[dict[str, Any]] = [
         "function": {
             "name": "ask_clarification",
             "description": (
-                "Pede esclarecimento ao usuário quando a pergunta é ambígua de um jeito que muda "
-                "o resultado. Encerra a conversa nesta rodada."
+                "Pede esclarecimento ao usuário só quando o pedido não tem nada para medir nem "
+                "para listar. Dúvida que os padrões das regras resolvem não é motivo. Encerra a "
+                "conversa nesta rodada."
             ),
             "parameters": {
                 "type": "object",
