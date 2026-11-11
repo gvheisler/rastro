@@ -135,6 +135,31 @@ def test_unreachable_server_becomes_an_llm_error():
         client_for(handler).complete(MESSAGES, TOOLS)
 
 
+def test_temperature_can_be_left_out():
+    seen = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen["body"] = json.loads(request.content)
+        return reply({"role": "assistant", "content": "ola"})
+
+    client_for(handler, temperature=None).complete(MESSAGES, TOOLS)
+    assert "temperature" not in seen["body"]
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        httpx.Response(200, text="<html>gateway</html>"),
+        httpx.Response(200, json={"error": "overloaded"}),
+        httpx.Response(200, json={"choices": []}),
+        httpx.Response(200, json=["nope"]),
+    ],
+)
+def test_unexpected_reply_bodies_become_llm_errors(response):
+    with pytest.raises(LLMError, match="unexpected reply"):
+        client_for(lambda r: response).complete(MESSAGES, TOOLS)
+
+
 def test_build_llm_uses_the_settings(monkeypatch):
     from rastro.agent.llm import build_llm
     from rastro.config import Settings

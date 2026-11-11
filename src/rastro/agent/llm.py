@@ -49,12 +49,14 @@ class OpenAICompatibleClient:
         *,
         api_key: str | None = None,
         extra_body: dict[str, Any] | None = None,
+        temperature: float | None = 0,
         timeout: float = 300,
         transport: httpx.BaseTransport | None = None,
     ) -> None:
         self.model = model
         self._base_url = base_url.rstrip("/")
         self._extra_body = extra_body or {}
+        self._temperature = temperature
         headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
         self._http = httpx.Client(timeout=timeout, headers=headers, transport=transport)
 
@@ -62,9 +64,10 @@ class OpenAICompatibleClient:
         body: dict[str, Any] = {
             "model": self.model,
             "messages": list(messages),
-            "temperature": 0,
             **self._extra_body,
         }
+        if self._temperature is not None:
+            body.setdefault("temperature", self._temperature)
         if tools:
             body["tools"] = list(tools)
         try:
@@ -76,15 +79,20 @@ class OpenAICompatibleClient:
         if response.status_code >= 400:
             raise LLMError(f"Model server returned {response.status_code}: {response.text[:300]}")
 
-        data = response.json()
-        message = data["choices"][0]["message"]
-        usage = data.get("usage") or {}
-        return Completion(
-            text=message.get("content") or "",
-            tool_calls=tuple(_tool_call(raw) for raw in message.get("tool_calls") or []),
-            input_tokens=usage.get("prompt_tokens", 0),
-            output_tokens=usage.get("completion_tokens", 0),
-        )
+        try:
+            data = response.json()
+            message = data["choices"][0]["message"]
+            usage = data.get("usage") or {}
+            return Completion(
+                text=message.get("content") or "",
+                tool_calls=tuple(_tool_call(raw) for raw in message.get("tool_calls") or []),
+                input_tokens=usage.get("prompt_tokens", 0),
+                output_tokens=usage.get("completion_tokens", 0),
+            )
+        except (ValueError, LookupError, TypeError, AttributeError) as error:
+            raise LLMError(
+                f"Model server sent an unexpected reply: {response.text[:300]}"
+            ) from error
 
 
 def _tool_call(raw: dict[str, Any]) -> ToolCall:
@@ -103,9 +111,20 @@ def _tool_call(raw: dict[str, Any]) -> ToolCall:
 
 
 def build_llm(settings: Settings) -> LLMClient:
+    """The client for the provider chosen in the settings (LLM_PROVIDER)."""
+    if settings.llm_provider == "anthropic":
+        from rastro.agent.llm_anthropic import AnthropicClient
+
+        return AnthropicClient(
+            settings.llm_model,
+            api_key=settings.anthropic_key,
+            base_url=settings.anthropic_base_url,
+            effort=settings.llm_effort,
+        )
     return OpenAICompatibleClient(
         settings.llm_base_url,
         settings.llm_model,
         api_key=settings.llm_api_key,
         extra_body=settings.llm_extra_body,
+        temperature=settings.llm_temperature,
     )
