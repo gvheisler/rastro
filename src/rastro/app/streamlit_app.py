@@ -12,6 +12,8 @@ EXAMPLES = [
     "Quais municípios tiveram mais valor pago em emendas em 2023?",
     "Quais autores destinaram mais valor empenhado em 2024?",
     "Quanto foi empenhado em transferências especiais em cada ano?",
+    "Quanto Joinville recebeu em transferências especiais em 2025?",
+    "Quanto foi gasto em emendas desde 2020?",
 ]
 CONTEXT_TURNS = 3
 ASSISTANT_AVATAR = ":material/travel_explore:"
