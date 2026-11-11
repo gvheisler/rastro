@@ -48,6 +48,10 @@ STEP_TEXT: dict[StepKind, tuple[str, str]] = {
     "plan": ("edit_note", "Montando a consulta"),
     "query": ("database", "Consultando o banco de dados"),
     "blocked": ("shield", "Consulta barrada pela verificação de segurança, ajustando"),
+    "unrequested_filter": (
+        "filter_alt_off",
+        "A consulta tem um filtro que a pergunta não pediu, ajustando",
+    ),
     "sql_error": ("build", "A consulta deu erro, corrigindo"),
     "answer": ("article", "Lendo o resultado e escrevendo a resposta"),
     "verify": ("fact_check", "Conferindo os números do texto"),
@@ -227,6 +231,12 @@ def render_body(answer: Answer) -> None:
         st.warning(
             "Estes valores do texto não aparecem no resultado da consulta, confira na tabela: "
             + ", ".join(answer.unverified_numbers)
+        )
+    if answer.unrequested_filters:
+        st.warning(
+            "A consulta aplicou filtros que a pergunta não pediu, então os valores podem estar "
+            "incompletos: "
+            + ", ".join(f"`{condition}`" for condition in answer.unrequested_filters)
         )
     if not answer.sql:
         return

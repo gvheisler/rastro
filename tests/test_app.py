@@ -181,3 +181,17 @@ def test_a_new_conversation_clears_the_answers(monkeypatch, readonly):
     next(b for b in at.sidebar.button if b.label == "Nova conversa").click().run()
     assert not [m for m in at.chat_message if m.name == "user"]
     assert len(at.main.button) >= 3
+
+
+def test_a_filter_the_model_kept_after_being_challenged_is_flagged_and_listed_as_a_step(
+    monkeypatch, readonly
+):
+    query = (
+        "select funcao, sum(valor_pago) as total from emendas "
+        "where localidade_tipo = 'municipio' group by funcao"
+    )
+    at = open_app(monkeypatch, readonly, sql(query), sql(query), say("Por função."))
+    ask(at, "Quais funções receberam mais valor pago?")
+    warnings = " ".join(w.value for w in at.warning)
+    assert "não pediu" in warnings and "localidade_tipo = 'municipio'" in warnings
+    assert "filtro que a pergunta não pediu" in status_text(at.status[0])
