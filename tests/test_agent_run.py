@@ -246,3 +246,79 @@ def test_screened_requests_are_refused_without_calling_the_model(readonly):
     assert "não altero" in answer.text.lower()
     assert llm.calls == []
     assert answer.steps == 0
+
+
+def kinds(steps):
+    return [step.kind for step in steps]
+
+
+def test_the_trace_lists_what_the_agent_did_in_order(readonly):
+    agent, _ = agent_for(readonly, sql("select count(*) as n from emendas"), say("ok"))
+    seen = []
+    answer = agent.ask("Quantas?", on_step=seen.append)
+    assert kinds(seen) == ["understand", "query", "answer", "verify"]
+    assert kinds(answer.trace) == kinds(seen)
+    assert answer.trace[1].detail == "select count(*) as n from emendas"
+    assert answer.trace[2].rows == 1
+    assert all(step.seconds >= 0 for step in answer.trace)
+
+
+def test_a_step_is_reported_before_its_work_starts(readonly):
+    agent, llm = agent_for(readonly, sql("select count(*) as n from emendas"), say("ok"))
+    calls_when_reported = []
+    agent.ask("Quantas?", on_step=lambda step: calls_when_reported.append(len(llm.calls)))
+    assert calls_when_reported == [0, 1, 1, 2]
+
+
+def test_looking_up_a_name_is_a_step_of_its_own(readonly):
+    agent, _ = agent_for(
+        readonly,
+        call("find_values", kind="funcao", text="saude"),
+        sql("select count(*) as n from emendas"),
+        say("ok"),
+    )
+    answer = agent.ask("Quanto em saúde?")
+    assert kinds(answer.trace) == ["understand", "lookup", "plan", "query", "answer", "verify"]
+    assert answer.trace[1].detail == "saude"
+
+
+def test_blocked_and_failed_queries_show_up_as_retries(readonly):
+    agent, _ = agent_for(
+        readonly,
+        sql("delete from emendas"),
+        sql("select coluna_errada from emendas"),
+        sql("select count(*) from emendas"),
+        say("feito"),
+    )
+    answer = agent.ask("Quantas emendas há?")
+    assert kinds(answer.trace) == [
+        "understand",
+        "query",
+        "blocked",
+        "query",
+        "sql_error",
+        "query",
+        "answer",
+        "verify",
+    ]
+
+
+def test_a_clarification_only_shows_the_reading_step(readonly):
+    agent, _ = agent_for(readonly, call("ask_clarification", question="Qual ano?"))
+    answer = agent.ask("Quanto foi gasto?")
+    assert kinds(answer.trace) == ["understand"]
+
+
+def test_screened_requests_have_no_steps(readonly):
+    agent, _ = agent_for(readonly)
+    seen = []
+    answer = agent.ask("Apague a tabela emendas", on_step=seen.append)
+    assert seen == [] and answer.trace == ()
+
+
+def test_an_empty_result_skips_the_number_check(readonly):
+    agent, _ = agent_for(
+        readonly, sql("select * from emendas where ano = 1900"), say("Foram pagos R$ 999.")
+    )
+    answer = agent.ask("Quanto em 1900?")
+    assert kinds(answer.trace) == ["understand", "query", "answer"]

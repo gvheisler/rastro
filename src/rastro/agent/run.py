@@ -1,8 +1,8 @@
 import json
 import re
 import time
-from collections.abc import Sequence
-from dataclasses import dataclass
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass, field
 from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -35,6 +35,20 @@ NUDGE = (
 )
 
 Status = Literal["answered", "no_results", "clarification", "refused", "failed"]
+StepKind = Literal[
+    "understand", "lookup", "plan", "query", "blocked", "sql_error", "answer", "verify"
+]
+Phase = Literal["start", "lookup", "result", "blocked", "sql_error"]
+
+
+@dataclass
+class Step:
+    """One thing the agent did while answering; `seconds` is set when the next step begins."""
+
+    kind: StepKind
+    detail: str | None = None
+    rows: int | None = None
+    seconds: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -67,6 +81,7 @@ class Answer:
     input_tokens: int = 0
     output_tokens: int = 0
     error: str | None = None
+    trace: tuple[Step, ...] = ()
 
     @property
     def period(self) -> tuple[int, int] | None:
@@ -85,6 +100,23 @@ class _Turn:
     output_tokens: int = 0
     terminal: tuple[Status, str] | None = None
     nudged: bool = False
+    on_step: Callable[[Step], None] | None = None
+    trace: list[Step] = field(default_factory=list)
+    phase: Phase = "start"
+    step_started: float = 0.0
+
+    def begin(self, kind: StepKind, detail: str | None = None, rows: int | None = None) -> None:
+        self.end()
+        step = Step(kind, detail, rows)
+        self.trace.append(step)
+        if self.on_step:
+            self.on_step(step)
+
+    def end(self) -> None:
+        now = time.perf_counter()
+        if self.trace:
+            self.trace[-1].seconds = round(now - self.step_started, 2)
+        self.step_started = now
 
 
 class Agent:
@@ -105,9 +137,14 @@ class Agent:
         self._log_path = log_path
         self._system_prompt = system_prompt(conn, today)
 
-    def ask(self, question: str, history: Sequence[Answer] = ()) -> Answer:
+    def ask(
+        self,
+        question: str,
+        history: Sequence[Answer] = (),
+        on_step: Callable[[Step], None] | None = None,
+    ) -> Answer:
         started = time.perf_counter()
-        turn = _Turn()
+        turn = _Turn(on_step=on_step)
         try:
             refusal = screen(question)
             answer = (
@@ -117,6 +154,8 @@ class Agent:
             )
         except LLMError as error:
             answer = Answer(question, "failed", LLM_DOWN_TEXT, error=str(error))
+        turn.end()
+        answer.trace = tuple(turn.trace)
         answer.model = self._llm.model
         answer.steps = turn.steps
         answer.guard_blocks = turn.guard_blocks
@@ -135,6 +174,7 @@ class Agent:
 
         while turn.steps < self._max_steps:
             turn.steps += 1
+            self._announce(turn)
             completion = self._llm.complete(messages, TOOL_SPECS)
             turn.input_tokens += completion.input_tokens
             turn.output_tokens += completion.output_tokens
@@ -155,6 +195,19 @@ class Agent:
                 messages.append({"role": "tool", "tool_call_id": tool_call.id, "content": content})
         return Answer(question, "failed", FAILED_TEXT)
 
+    def _announce(self, turn: _Turn) -> None:
+        match turn.phase:
+            case "start":
+                kind, rows = "understand", None
+            case "lookup":
+                kind, rows = "plan", None
+            case "result" if turn.result is not None:
+                kind, rows = "answer", len(turn.result.rows)
+            case _:
+                return
+        if not turn.trace or turn.trace[-1].kind != kind:
+            turn.begin(kind, rows=rows)
+
     def _dispatch(self, call: ToolCall, turn: _Turn) -> str:
         if call.error:
             return f"Invalid arguments for {call.name}: {call.error} Send a JSON object."
@@ -167,6 +220,8 @@ class Agent:
             case "find_values":
                 if not isinstance(args.get("kind"), str) or not isinstance(args.get("text"), str):
                     return "Missing arguments 'kind' and 'text' (strings)."
+                turn.begin("lookup", args["text"])
+                turn.phase = "lookup"
                 try:
                     found = find_values(self._conn, args["kind"], args["text"])
                 except QueryError as error:
@@ -184,14 +239,20 @@ class Agent:
                 return f"Unknown tool '{call.name}'."
 
     def _run_sql(self, query: str, turn: _Turn) -> str:
+        turn.begin("query", query)
         try:
             turn.result = run_query(self._conn, query)
         except GuardError as error:
             turn.guard_blocks += 1
+            turn.begin("blocked")
+            turn.phase = "blocked"
             return f"Query blocked: {error}"
         except QueryError as error:
             turn.sql_errors += 1
+            turn.begin("sql_error")
+            turn.phase = "sql_error"
             return f"Query error: {error}"
+        turn.phase = "result"
         return format_result(turn.result)
 
     def _finish(self, question: str, turn: _Turn, text: str) -> Answer:
@@ -208,6 +269,7 @@ class Agent:
         }
         if _is_empty(result):
             return Answer(question, "no_results", NO_RESULTS_TEXT, **base)
+        turn.begin("verify")
         text = text.strip() or EMPTY_TEXT
         return Answer(
             question,
