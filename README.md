@@ -43,12 +43,17 @@ Os dados passam por três camadas: `raw` guarda os CSVs do Portal da Transparên
 1. Uma triagem simples recusa, antes do modelo, pedidos para alterar dados, pedir CPF ou acusar pessoas.
 2. O modelo recebe o esquema do `mart` e escolhe entre quatro ferramentas: `run_sql`, `find_values` (como um nome está escrito nos dados), `ask_clarification` e `refuse`.
 3. Todo SQL passa pelo `sql_guard`: uma única instrução `SELECT`, só tabelas do `mart`, sem funções de sistema (como `pg_sleep` ou `current_setting`), `AND` e `OR` com parênteses e `LIMIT` de no máximo 200 linhas. A consulta roda com um usuário Postgres somente leitura e limite de 10 s.
-4. Uma verificação sem modelo compara a consulta com a pergunta. Se a consulta filtra ano, tipo de localidade, tipo de emenda ou planos impedidos e a pergunta não cita isso, ela volta ao modelo uma vez com a explicação. Se o modelo insistir, a resposta sai com um aviso sobre o filtro.
-5. Enquanto o agente trabalha, o chat lista cada etapa (entender a pergunta, consultar o banco, escrever a resposta, conferir os números) com o tempo de cada uma, e a lista fica na resposta.
-6. A resposta mostra o texto, a tabela com o resultado, a fonte e o SQL. Resultado vazio vira "não encontrei" e valores do texto que não aparecem no resultado são sinalizados.
-7. Cada pergunta, SQL, tempo e modelo ficam em `logs/agent.jsonl`.
+4. Uma verificação sem modelo compara a consulta com a pergunta. Se a consulta filtra ano, tipo de localidade, tipo de emenda ou planos impedidos e a pergunta não cita isso, ou se combina valores diferentes (pago, empenhado, liquidado) sem a pergunta pedir, ela volta ao modelo uma vez com a explicação. Se o modelo insistir, a resposta sai com um aviso sobre o filtro ou, no caso dos valores, com o quadro dizendo quais usou.
+5. Quando a pergunta deixa dúvida, o agente decide em vez de perguntar. Se o modelo pede esclarecimento, a primeira tentativa volta a ele para que escolha o padrão (valor pago, ano da emenda); só chega ao usuário a pergunta de um pedido sem nada para medir ou listar. A resposta traz o quadro "Como interpretei a pergunta", por exemplo "Você não disse qual valor queria; usei o valor pago" e "Considerei o ano da emenda no orçamento, não a data do pagamento". Essas frases são montadas pelo código a partir do SQL que rodou, e não escritas pelo modelo, para que não contradigam a consulta.
+6. Enquanto o agente trabalha, o chat lista cada etapa (entender a pergunta, consultar o banco, escrever a resposta, conferir os números) com o tempo de cada uma, e a lista fica na resposta.
+7. A resposta mostra o texto, a tabela com o resultado, a fonte e o SQL. Resultado vazio vira "não encontrei" e valores do texto que não aparecem no resultado são sinalizados.
+8. Cada pergunta, SQL, tempo e modelo ficam em `logs/agent.jsonl`.
 
-O cliente usa a API de chat compatível com OpenAI. Foi testado com o Ollama; outro servidor compatível, como o vLLM, deve funcionar ajustando `LLM_BASE_URL`, `LLM_MODEL` e `LLM_EXTRA_BODY` no `.env`.
+### Modelo de linguagem
+
+A qualidade das respostas depende do modelo. Aqui o agente roda com o `qwen3:8b` no Ollama (o `rastro-sql`, criado por `make model`), um modelo pequeno que roda numa GPU de 8 GB, com parte na CPU, e o prompt e as verificações acima foram ajustados para ele. Trocar de modelo muda a qualidade, o tempo de resposta e os tipos de erro; as verificações valem para qualquer modelo, mas não corrigem tudo.
+
+O modelo é configurável. O cliente fala a API de chat compatível com OpenAI, então basta apontar `LLM_BASE_URL` e `LLM_MODEL` no `.env` para outro modelo do Ollama ou para outro servidor compatível, como o vLLM (que não foi testado aqui). `LLM_EXTRA_BODY` (JSON) vai junto de cada requisição: o padrão, `{"reasoning_effort": "none"}`, desliga o raciocínio do qwen3, e há modelos que não aceitam esse valor (o `gpt-oss` só aceita `low`, `medium` ou `high`).
 
 ## Fontes dos dados
 
