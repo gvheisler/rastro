@@ -162,6 +162,8 @@ Contribuições são bem-vindas. Abra uma issue descrevendo o problema ou a idei
 
 Projeto independente, sem vínculo com o TCE/SC, a ALESC, a CGU ou qualquer outro órgão público. Os números exibidos vêm das fontes acima e não implicam juízo sobre pessoas, empresas ou parlamentares.
 
+Desenvolvido com assistência de IA (Claude Code).
+
 ## Licença
 
 [MIT](LICENSE)
