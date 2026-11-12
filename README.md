@@ -10,6 +10,9 @@ Pergunte em português para onde foi o dinheiro das emendas parlamentares destin
 
 O Rastro carrega dados públicos de emendas parlamentares em um banco Postgres e usa um agente de IA para transformar perguntas em português em consultas SQL somente leitura. Cada resposta mostra o texto, a tabela com o resultado, a fonte e o SQL executado, para que qualquer número possa ser conferido.
 
+> [!NOTE]
+> Projeto de portfólio, ainda em andamento. Os resultados não foram validados: as respostas podem estar erradas e os dados, incompletos. Não use os números sem conferir nas fontes oficiais. Detalhes em [Limitações](#limitações).
+
 ## Índice
 
 - [Por que existe](#por-que-existe)
