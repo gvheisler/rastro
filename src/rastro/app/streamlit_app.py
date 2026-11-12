@@ -1,4 +1,5 @@
 from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
@@ -16,33 +17,7 @@ EXAMPLES = [
     "Quanto foi gasto em emendas desde 2020?",
 ]
 CONTEXT_TURNS = 3
-ASSISTANT_AVATAR = ":material/travel_explore:"
-USER_AVATAR = ":material/person:"
-STYLE = """
-<style>
-.st-key-examples button {
-    min-height: 4.5rem;
-    padding: 0.75rem 1rem;
-}
-.st-key-examples button > div,
-.st-key-examples button span {
-    display: block !important;
-    width: 100%;
-    text-align: left !important;
-}
-.st-key-examples button p {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-    text-align: left !important;
-}
-[data-testid="stExpanderDetails"] pre,
-[data-testid="stExpanderDetails"] code {
-    white-space: pre-wrap !important;
-    word-break: break-word;
-}
-</style>
-"""
+STYLE = Path(__file__).with_name("style.css").read_text(encoding="utf-8")
 
 STEP_TEXT: dict[StepKind, tuple[str, str]] = {
     "understand": ("psychology", "Entendendo a pergunta e os dados"),
@@ -73,27 +48,22 @@ def main() -> None:
         st.session_state.answers = []
     answers: list[Answer] = st.session_state.answers
 
-    st.title("Rastro")
-    st.caption(
-        "Pergunte em português para onde foi o dinheiro das emendas parlamentares "
-        "destinadas a Santa Catarina."
-    )
-
-    question = st.chat_input("Pergunte sobre as emendas para Santa Catarina")
+    question = st.chat_input("Pergunte sobre as emendas")
     question = question or st.session_state.pop("pending", None)
     question = question.strip() if question else None
 
+    render_masthead(compact=bool(answers or question))
     if not answers and not question:
         render_examples()
-    for answer in answers:
-        with st.chat_message("user", avatar=USER_AVATAR):
+    for number, answer in enumerate(answers):
+        with st.chat_message("user"):
             st.markdown(answer.question)
-        with st.chat_message("assistant", avatar=ASSISTANT_AVATAR):
-            render_answer(answer)
+        with st.chat_message("assistant"):
+            render_answer(answer, number)
     if question:
         ask(question)
     render_sidebar(bool(answers))
-    st.html(STYLE)
+    st.html(f"<style>{STYLE}</style>")
 
 
 def choose(question: str) -> None:
@@ -104,18 +74,28 @@ def reset() -> None:
     st.session_state.answers = []
 
 
+def render_masthead(*, compact: bool) -> None:
+    with st.container(key="masthead-compact" if compact else "masthead"):
+        st.title("Rastro", anchor=False)
+        if not compact:
+            st.caption(
+                "Pergunte em português para onde foi o dinheiro das emendas parlamentares "
+                "destinadas a Santa Catarina."
+            )
+
+
 def render_examples() -> None:
-    st.markdown("#### Comece por uma destas perguntas")
     with st.container(key="examples"):
-        for start in range(0, len(EXAMPLES), 2):
-            for column, example in zip(st.columns(2), EXAMPLES[start : start + 2], strict=False):
-                column.button(
-                    example,
-                    key=f"example{EXAMPLES.index(example)}",
-                    on_click=choose,
-                    args=(example,),
-                    width="stretch",
-                )
+        st.caption("Perguntas para começar")
+        for number, example in enumerate(EXAMPLES):
+            st.button(
+                example,
+                key=f"example{number}",
+                on_click=choose,
+                args=(example,),
+                type="tertiary",
+                width="stretch",
+            )
 
 
 def render_sidebar(has_conversation: bool) -> None:
@@ -196,9 +176,9 @@ def trace_markdown(steps: list[Step], *, running: bool) -> str:
 
 
 def ask(question: str) -> None:
-    with st.chat_message("user", avatar=USER_AVATAR):
+    with st.chat_message("user"):
         st.markdown(question)
-    with st.chat_message("assistant", avatar=ASSISTANT_AVATAR):
+    with st.chat_message("assistant"):
         live = LiveTrace()
         try:
             if "agent" not in st.session_state:
@@ -211,20 +191,20 @@ def ask(question: str) -> None:
             st.error(f"Não consegui conectar ao banco. Rode `make up`. ({error})")
             return
         live.finish(answer)
-        render_body(answer)
+        render_body(answer, len(st.session_state.answers))
     st.session_state.answers.append(answer)
 
 
-def render_answer(answer: Answer) -> None:
+def render_answer(answer: Answer, number: int) -> None:
     if answer.trace:
         with st.status(
             final_label(answer), state="error" if answer.error else "complete", expanded=False
         ):
             st.markdown(trace_markdown(list(answer.trace), running=False))
-    render_body(answer)
+    render_body(answer, number)
 
 
-def render_body(answer: Answer) -> None:
+def render_body(answer: Answer, number: int) -> None:
     if answer.error:
         st.error(f"{answer.text} ({answer.error})")
         return
@@ -250,8 +230,9 @@ def render_body(answer: Answer) -> None:
 
     frame, config = table(answer)
     st.dataframe(frame, hide_index=True, column_config=config)
-    for line in caption_lines(answer):
-        st.caption(line)
+    with st.container(key=f"meta{number}"):
+        for line in caption_lines(answer):
+            st.caption(line)
     with st.expander("SQL executado"):
         st.code(answer.sql, language="sql")
 

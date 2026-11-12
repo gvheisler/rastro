@@ -1,0 +1,223 @@
+:root {
+    --rastro-accent: #0f4c5c;
+    --rastro-line: color-mix(in srgb, currentColor 14%, transparent);
+    --rastro-tint: color-mix(in srgb, currentColor 5%, transparent);
+    --rastro-muted: #4d5a66;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --rastro-accent: #7cc0d0;
+        --rastro-muted: #a3afb9;
+    }
+}
+
+/* Page */
+[data-testid="stMainBlockContainer"] {
+    max-width: 46rem;
+    padding-top: 4rem;
+}
+
+/* Masthead: the name, a short trail under it, and the scope */
+.st-key-masthead h1 {
+    padding: 0;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+}
+.st-key-masthead h1::after {
+    content: "";
+    display: block;
+    width: 4.5rem;
+    height: 6px;
+    margin-top: 0.9rem;
+    background:
+        radial-gradient(circle at 3px 3px, var(--rastro-accent) 3px, transparent 3.5px) right center / 6px 6px no-repeat,
+        radial-gradient(circle at 1.5px 3px, var(--rastro-accent) 1.5px, transparent 2px) left center / 9px 6px repeat-x;
+    background-clip: border-box, content-box;
+    padding-right: 12px;
+    box-sizing: border-box;
+}
+.st-key-masthead [data-testid="stCaptionContainer"] {
+    margin-top: 0.75rem;
+    opacity: 1;
+}
+.st-key-masthead [data-testid="stCaptionContainer"] p {
+    max-width: 34rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--rastro-muted);
+}
+.st-key-masthead-compact h1 {
+    padding: 0 0 0.75rem;
+    border-bottom: 1px solid var(--rastro-line);
+    font-size: 1.375rem;
+    letter-spacing: -0.01em;
+}
+
+/* Example questions: a plain list with hairlines */
+.st-key-examples {
+    margin-top: 2rem;
+    gap: 0;
+}
+.st-key-examples [data-testid="stCaptionContainer"] {
+    opacity: 1;
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rastro-line);
+}
+.st-key-examples [data-testid="stCaptionContainer"] p {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--rastro-muted);
+}
+.st-key-examples button {
+    min-height: 0;
+    padding: 0.875rem 0;
+    justify-content: flex-start;
+    align-items: center;
+    border: 0;
+    border-bottom: 1px solid var(--rastro-line);
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    transition: color 150ms ease, padding-left 150ms ease, background-color 150ms ease;
+}
+.st-key-examples button:hover,
+.st-key-examples button:focus-visible {
+    padding-left: 0.75rem;
+    background: var(--rastro-tint);
+    color: var(--rastro-accent);
+}
+.st-key-examples button:focus-visible {
+    outline: 2px solid var(--rastro-accent);
+    outline-offset: -2px;
+}
+.st-key-examples button > div,
+.st-key-examples button span {
+    display: block !important;
+    width: 100%;
+    text-align: left !important;
+}
+.st-key-examples button p {
+    font-size: 1rem;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    text-align: left !important;
+}
+
+/* Conversation: the question sits to the right, the answer runs as text */
+[data-testid="stChatMessage"] {
+    padding: 0;
+    gap: 0;
+    background: transparent;
+}
+[data-testid="stChatMessageAvatarUser"],
+[data-testid="stChatMessageAvatarAssistant"] {
+    display: none;
+}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"])
+    [data-testid="stChatMessageContent"] {
+    flex: 0 1 auto;
+    width: auto;
+    max-width: 85%;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--rastro-line);
+    border-radius: 0.75rem 0.75rem 0.125rem 0.75rem;
+    background: var(--rastro-tint);
+}
+[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p {
+    line-height: 1.65;
+}
+
+/* Steps the agent took: one quiet line that opens */
+[data-testid="stChatMessage"] [data-testid="stExpander"] details {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+[data-testid="stChatMessage"] [data-testid="stExpander"] summary {
+    padding: 0.25rem 0;
+    border-radius: 0;
+    background: transparent;
+    font-size: 0.875rem;
+    color: var(--rastro-muted);
+}
+[data-testid="stChatMessage"] [data-testid="stExpander"] summary:hover {
+    color: var(--rastro-accent);
+}
+[data-testid="stChatMessage"] [data-testid="stExpanderDetails"] {
+    margin: 0.25rem 0 0.5rem;
+    padding: 0.25rem 0 0.25rem 1rem;
+    border-top: 0;
+    border-left: 2px solid var(--rastro-line);
+    font-size: 0.875rem;
+}
+[data-testid="stExpanderDetails"] pre,
+[data-testid="stExpanderDetails"] code {
+    white-space: pre-wrap !important;
+    word-break: break-word;
+}
+
+/* Notes and warnings: a rule on the left instead of a filled box */
+[data-testid="stChatMessage"] [data-testid="stAlertContainer"] {
+    padding: 0.5rem 0 0.5rem 1rem;
+    border-radius: 0;
+    border-left: 2px solid var(--rastro-accent);
+    background: transparent;
+    color: inherit;
+}
+[data-testid="stChatMessage"] [data-testid="stAlertContainer"]:has([data-testid="stAlertContentWarning"]) {
+    border-left-color: #b7791f;
+}
+[data-testid="stChatMessage"] [data-testid="stAlertContainer"]:has([data-testid="stAlertContentError"]) {
+    border-left-color: #c0392b;
+}
+[data-testid="stChatMessage"] [data-testid="stAlertContainer"] [data-testid="stIconMaterial"] {
+    color: var(--rastro-accent);
+}
+[data-testid="stChatMessage"] [data-testid="stAlertContainer"] p,
+[data-testid="stChatMessage"] [data-testid="stAlertContainer"] li {
+    font-size: 0.9375rem;
+}
+
+/* Source and model lines under the table */
+[class*="st-key-meta"] {
+    gap: 0.125rem;
+}
+[class*="st-key-meta"] p {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+/* Question box */
+[data-testid="stChatInput"] > div {
+    border-radius: 0.75rem;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] h3 {
+    padding-bottom: 0.25rem;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--rastro-muted);
+}
+
+@media (max-width: 640px) {
+    [data-testid="stMainBlockContainer"] {
+        padding-top: 4.5rem;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .st-key-examples button {
+        transition: none;
+    }
+}
